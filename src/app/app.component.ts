@@ -1,46 +1,25 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { getDocs } from 'firebase/firestore';
+import { RouterModule } from '@angular/router';
 
-import { TestFirestoreComponent } from './test-firestore/test-firestore.component';
+import { HomeComponent } from './home/home.component';
+import { AddWorkoutComponent } from './add-workout/add-workout.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
+    RouterModule,
     CommonModule,
-    TestFirestoreComponent
+    HomeComponent,
+    AddWorkoutComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  // firestore: Firestore = inject(Firestore);
-
-  // items$: Observable<any[]>;
+  title: string = 'Reps.';
 
   constructor() {
-    // const aCollection = collection(this.firestore, 'items');
-    // this.items$ = collectionData(aCollection);
   }
-
-  // ngOnInit() {
-  //   getDocs(collection(this.firestore, "testPath"))
-  //     .then((response) => {
-  //       console.log(response.docs);
-  //     })
-  // }
 }
-
-/*
-<ul>
-  <li class="text" *ngFor="let item of items$ | async">
-    {{item.name}}
-  </li>
-</ul>
-
-*/
