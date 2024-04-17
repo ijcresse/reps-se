@@ -1,13 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { getDocs } from 'firebase/firestore';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  firestore: Firestore = inject(Firestore);
+
+  items$: Observable<any[]>;
   title = 'reps-se';
+
+  constructor() {
+    const aCollection = collection(this.firestore, 'items');
+    this.items$ = collectionData(aCollection);
+  }
+
+  // ngOnInit() {
+  //   getDocs(collection(this.firestore, "testPath"))
+  //     .then((response) => {
+  //       console.log(response.docs);
+  //     })
+  // }
 }
