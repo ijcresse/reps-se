@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "reps-se": {
+      "hosting": {
+        "reps-se": [
+          "reps-se"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "reps-se"
+  }
+}
