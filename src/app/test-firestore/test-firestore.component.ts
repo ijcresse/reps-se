@@ -2,11 +2,16 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { 
+  addDoc,
   getDocs, 
   getDoc, 
   setDoc, 
   doc,
-  query
+  query,
+  serverTimestamp,
+  limit,
+  updateDoc,
+  orderBy
 } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
 
@@ -24,6 +29,7 @@ export class TestFirestoreComponent {
   templates$: Observable<any[]> = of();
   chestDayWorkouts$: Observable<any[]> = of();
   chestDayWorkoutInstances$: Observable<any[]> = of();
+  chestDayWorkoutInstances: any[] = [];
   
   constructor() {
   }
@@ -60,19 +66,53 @@ export class TestFirestoreComponent {
   }
 
   async saveWorkoutData() {
-
+    //randomizes id
+    // const benchPressCollectionRef = doc(this.firestore, "WorkoutTemplates", "ChestDay", "Workouts", "BenchPress");
+    const instanceCollection = collection(this.firestore, "WorkoutTemplates", "ChestDay", "Workouts", "BenchPress", "Instances");
+    const benchPressInstanceDoc = {
+      date: serverTimestamp(),
+      user: 'Ian',
+      performance: {
+        sets: 3,
+        reps: 8,
+        weight: 145
+      }
+    }
+    await addDoc(instanceCollection, benchPressInstanceDoc);
   }
 
   async addWorkoutTemplate() {
-
-  }
-
-  async addWorkoutAndInstance() {
-
+    const templatesDocRef = doc(this.firestore, "WorkoutTemplates", "LegDay");
+    const templatesDoc = {
+      displayName: "Leg Day",
+      color: "green",
+      latestWorkout: serverTimestamp()
+    }
+    //setdoc is important - lets you set the ID yourself
+    await setDoc(templatesDocRef, templatesDoc);
   }
 
   async updateWorkoutInstance() {
+    //flow: get specific instance, and update that one. be precise with query
+    // const docRef = doc(this.firestore, "WorkoutTemplates", "ChestDay", "Workouts", "BenchPress", "Instances")
 
+    let docId: string = '';
+    const q = query(
+      collection(
+        this.firestore, "WorkoutTemplates", "ChestDay", "Workouts", "BenchPress", "Instances"), 
+        limit(1), orderBy("date", "desc"));
+    const instanceDocsSnaps = await getDocs(q);
+    instanceDocsSnaps.forEach((doc) => {
+      docId = doc.id;
+    })
+    console.log(docId);
+    await updateDoc(doc(this.firestore, "WorkoutTemplates", "ChestDay", "Workouts", "BenchPress", "Instances", docId), {
+      performance: {
+        sets: 3,
+        reps: 5,
+        weight: 215
+      }
+    });
   }
 }
 
