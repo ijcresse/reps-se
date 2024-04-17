@@ -1,0 +1,57 @@
+<h3>Testing firestore functionality with a few buttons</h3>
+<section>
+    <ol>
+        <li>
+            <button (click)="fetchTemplates()">
+                Fetch Templates
+            </button>
+            <ul>
+                <li class="text" *ngFor="let template of templates$ | async">
+                    {{ template.id }}
+                </li>
+            </ul>
+        </li>
+        <li>
+            <button (click)="fetchWorkoutsFromTemplate()">
+                Fetch Workouts From Template
+            </button>
+            <ul>
+                <li class="text" *ngFor="let workout of chestDayWorkouts$ | async">
+                    {{ workout.id }}
+                </li>
+            </ul>
+        </li>
+        <li>
+            <button (click)="fetchInstancesFromWorkout()">
+                Fetch Instances From Workout
+            </button>
+            <ul>
+                <li class="text" *ngFor="let instance of chestDayWorkoutInstances$ | async">
+                    {{ instance.id }}
+                </li>
+            </ul>
+        </li>
+        <li>
+            <button (click)="saveWorkoutData()">
+                Save Workout Data
+            </button>
+        </li>
+        <li>
+            <button (click)="addWorkoutTemplate()">
+                Add Workout Template
+            </button>
+        </li>
+        <li>
+            <button (click)="addWorkoutAndInstance()">
+                Add Workout And Instance
+            </button>
+        </li>
+        <li>
+            <button (click)="updateWorkoutInstance()">
+                Update Workout Instance Data
+            </button>
+        </li>
+    </ol>
+
+
+</section>
