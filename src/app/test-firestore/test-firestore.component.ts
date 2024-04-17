@@ -8,7 +8,7 @@ import {
   doc,
   query
 } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-test-firestore',
@@ -21,24 +21,22 @@ import { Observable } from 'rxjs';
 })
 export class TestFirestoreComponent {
   firestore: Firestore = inject(Firestore);
-  templates$: Observable<any[]> | undefined;
-  chestDayWorkouts$: Observable<any[]> | undefined;
-  chestDayWorkoutInstances$: Observable<any[]> | undefined;
+  templates$: Observable<any[]> = of();
+  chestDayWorkouts$: Observable<any[]> = of();
+  chestDayWorkoutInstances$: Observable<any[]> = of();
   
   constructor() {
   }
 
   async fetchTemplates() {
-    const q = query(collection(this.firestore, 'WorkoutTemplates'));
-    const qSnap = await getDocs(q);
-    qSnap.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-    });
-    //struggling to get this to render in ui :/
-    // const templateCollection = collection(this.firestore, 'WorkoutTemplates');
-    // this.templates$ = collectionData(templateCollection);
-    //spits out a stream or something, not the real data
-    // console.log(this.templates$);
+    // const q = query(collection(this.firestore, 'WorkoutTemplates'));
+    // const qSnap = await getDocs(q);
+    // qSnap.forEach((doc) => {
+    //   console.log(doc.id, " => ", doc.data());
+    // });
+    const templateCollection = collection(this.firestore, 'WorkoutTemplates');
+    this.templates$ = collectionData(templateCollection);
+    console.log(this.templates$);
   }
 
   async fetchWorkoutsFromTemplate() {

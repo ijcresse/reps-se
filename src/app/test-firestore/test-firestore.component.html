@@ -6,8 +6,8 @@
                 Fetch Templates
             </button>
             <ul>
-                <li class="text" *ngFor="let template of templates$ | async">
-                    {{ template.id }}
+                <li *ngFor="let template of templates$ | async">
+                    {{ template.displayName }}, {{ template.color }}, {{ template.latestWorkout }}
                 </li>
             </ul>
         </li>
@@ -17,7 +17,7 @@
             </button>
             <ul>
                 <li class="text" *ngFor="let workout of chestDayWorkouts$ | async">
-                    {{ workout.id }}
+                    {{ workout.displayName }}, {{ workout.isVisible }}
                 </li>
             </ul>
         </li>
@@ -27,7 +27,7 @@
             </button>
             <ul>
                 <li class="text" *ngFor="let instance of chestDayWorkoutInstances$ | async">
-                    {{ instance.id }}
+                    {{ instance.date }}, {{ instance.user }}, {{ instance.performance.sets }}, {{ instance.performance.reps }}, {{ instance.performance.weight }}
                 </li>
             </ul>
         </li>
