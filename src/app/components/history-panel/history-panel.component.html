@@ -1,15 +1,9 @@
-<!-- <p>history-panel works!</p>
-<p>{{ historyDoc.date}} {{ historyDoc.displayName }}</p>
-<ul>
-    <li *ngFor="let ref of historyDoc.instanceRefs">
-        {{ ref }}
-    </li>
-</ul> -->
 <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
     <mat-expansion-panel-header>
         <mat-panel-title>{{ historyDoc.displayName }}</mat-panel-title>
-        <!-- pipe thru a display date thingy -->
         <mat-panel-description>{{ historyDoc.date.toMillis() | date: 'dd/MM/yyyy' }}</mat-panel-description>
     </mat-expansion-panel-header>
-    <app-workout-instance *ngFor="let instanceRef of historyDoc.instanceRefs" [instanceRef]="instanceRef"></app-workout-instance>
+    <ng-template matExpansionPanelContent>
+        <app-workout-instance *ngFor="let instanceRef of historyDoc.instanceRefs" [instanceRef]="instanceRef"></app-workout-instance>
+    </ng-template>
 </mat-expansion-panel>

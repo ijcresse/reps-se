@@ -4,19 +4,8 @@
     </a>
 </section>
 <section class="content">
+    <app-add-panel></app-add-panel>
     <mat-accordion>
-        <!-- the opened state should fire off a fetch on instance data  -->
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>History 1</mat-panel-title>
-                <mat-panel-description>4/4/2024</mat-panel-description>
-            </mat-expansion-panel-header>
-            <section class="history-details">
-                <p>
-                    section with details!
-                </p>
-            </section>
-        </mat-expansion-panel>
         <app-history-panel *ngFor="let historyDoc of history$ | async" [historyDoc]="historyDoc"></app-history-panel>
     </mat-accordion>
 </section>
