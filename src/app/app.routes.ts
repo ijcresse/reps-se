@@ -10,7 +10,7 @@ export const routes: Routes = [
         title: 'Home page'
     },
     {
-        path: 'add',
+        path: 'add/:templateId',
         component: AddWorkoutComponent,
         title: 'New Workout'
     }

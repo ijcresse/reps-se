@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { Firestore, collection, collectionData } from '@angular/fire/firestore'
@@ -34,6 +34,7 @@ import { FormsModule, FormControl } from '@angular/forms';
   styleUrl: './add-panel.component.scss'
 })
 export class AddPanelComponent {
+
   db: Firestore = inject(Firestore);
   templates$: Observable<any[]> = of();
   activeTab = new FormControl(0);
@@ -41,20 +42,22 @@ export class AddPanelComponent {
 
   selectedTemplate: any;
   templateName: string = ''
+
+  constructor(private router: Router) { }
   
   async panelOpened() {
     if (this.loaded) {
-      console.log('panel opened without reloading data');
       return;
     }
     const templatesQuery = query(collection(this.db, "WorkoutTemplates"));
     this.templates$ = collectionData(templatesQuery, { idField: 'id' });
-    console.log('panel opened, loading data', this.templates$);
     this.loaded = true;
   }
 
   createTemplate() {
-    console.log('selected template:', this.selectedTemplate, 'templateName', this.templateName, 'activeTab', this.activeTab.value);
+    const templateLinkId = this.activeTab.value === 0 ? this.selectedTemplate : this.templateName;
+    //if templateLinkId is null, throw an error. shouldn't happen with proper validation in forms though
+    this.router.navigateByUrl(`/add/${templateLinkId}`);
     /*
     if activeTab is on new template then we pass new template name to AddWorkoutComponent
     else we pass in the collection
