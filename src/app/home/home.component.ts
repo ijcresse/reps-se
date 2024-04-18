@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 
-import { AddPanelComponent } from '../components/add-panel/add-panel.component';
 import { HistoryPanelComponent } from '../components/history-panel/history-panel.component';
 
 @Component({
@@ -14,8 +15,9 @@ import { HistoryPanelComponent } from '../components/history-panel/history-panel
   imports: [
     CommonModule,
     RouterModule,
+    MatCardModule,
+    MatIconModule,
     MatExpansionModule,
-    AddPanelComponent,
     HistoryPanelComponent
   ],
   templateUrl: './home.component.html',
@@ -26,7 +28,6 @@ export class HomeComponent {
   history$: Observable<any[]> = of();
 
   title: string = 'Reps.';
-  panelOpenState: boolean = false;
 
   ngOnInit() {
     const historyCollection = collection(this.db, "History");
