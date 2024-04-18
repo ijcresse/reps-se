@@ -1,0 +1,11 @@
+<section class="header">
+    <a [routerLink]="['/']">
+        <h1 class="header-title">{{ title }}</h1>
+    </a>
+</section>
+<section class="content">
+    <mat-accordion multi>
+        <app-add-panel></app-add-panel>
+        <app-history-panel *ngFor="let historyDoc of history$ | async" [historyDoc]="historyDoc"></app-history-panel>
+    </mat-accordion>
+</section>
