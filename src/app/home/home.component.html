@@ -4,12 +4,8 @@
     </a>
 </section>
 <section class="content">
-    <mat-card>
-        <a [routerLink]="['/add']">
-            <mat-icon>add_circle</mat-icon>
-        </a>
-    </mat-card>
-    <mat-accordion>
+    <mat-accordion multi>
+        <app-add-panel></app-add-panel>
         <app-history-panel *ngFor="let historyDoc of history$ | async" [historyDoc]="historyDoc"></app-history-panel>
     </mat-accordion>
 </section>

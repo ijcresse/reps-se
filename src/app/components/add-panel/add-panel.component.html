@@ -1,0 +1,43 @@
+<mat-expansion-panel (opened)="panelOpened()">
+    <mat-expansion-panel-header>
+        <mat-panel-description>
+            <mat-icon>add_circle</mat-icon>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+        <mat-tab-group [selectedIndex]="activeTab.value" (selectedIndexChange)="activeTab.setValue($event)">
+            <mat-tab label="From Template">
+                <ng-template matTabContent>
+                    @if ((templates$ | async) === null) {
+                        Loading templates...
+                    }
+                    <mat-form-field>
+                        <mat-label>Existing Templates</mat-label>
+                        <mat-select [(ngModel)]="selectedTemplate">
+                            <mat-option *ngFor="let template of templates$ | async" [value]="template.id">
+                                {{ template.displayName }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="New Template">
+                <ng-template matTabContent>
+                    <mat-form-field>
+                        <mat-label>Template Name</mat-label>
+                        <input matInput [(ngModel)]="templateName" />
+                        @if (templateName) {
+                            <button matSuffix mat-icon-button aria-label="clear" (click)="templateName=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        }
+                        <!-- do want some validation here eventually. can't be empty, can't match existing template values. -->
+                    </mat-form-field>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </ng-template>
+    <mat-action-row>
+        <button mat-button color="primary" (click)="createTemplate()">Create</button>
+    </mat-action-row>
+</mat-expansion-panel>

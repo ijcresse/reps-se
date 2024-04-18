@@ -19,6 +19,5 @@ export class HistoryPanelComponent {
   @Input() historyDoc!: any;
 
   instancesFetched: boolean = false;
-  panelOpenState: boolean = false;
 
 }
