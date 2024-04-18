@@ -1,1 +1,7 @@
 <p>history-panel works!</p>
+<p>{{ historyDoc.date}} {{ historyDoc.displayName }}</p>
+<ul>
+    <li *ngFor="let ref of historyDoc.instanceRefs">
+        {{ ref }}
+    </li>
+</ul>

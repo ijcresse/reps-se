@@ -17,5 +17,6 @@
                 </p>
             </section>
         </mat-expansion-panel>
+        <app-history-panel *ngFor="let historyDoc of history$ | async" [historyDoc]="historyDoc"></app-history-panel>
     </mat-accordion>
 </section>

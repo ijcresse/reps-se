@@ -2,18 +2,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { 
-  Firestore, 
-  collection, 
-  collectionData 
-} from '@angular/fire/firestore';
-import {
-  doc,
-  getDocs,
-  limit,
-  orderBy,
-} from 'firebase/firestore';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
+
+import { HistoryPanelComponent } from '../components/history-panel/history-panel.component';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +13,8 @@ import { Observable, of } from 'rxjs';
   imports: [
     CommonModule,
     RouterModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HistoryPanelComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -34,11 +27,12 @@ export class HomeComponent {
   panelOpenState: boolean = false;
 
   constructor() {
-
+    
   }
 
   ngOnInit() {
     const historyCollection = collection(this.db, "History");
     this.history$ = collectionData(historyCollection);
+    console.log(this.history$);
   }
 }
