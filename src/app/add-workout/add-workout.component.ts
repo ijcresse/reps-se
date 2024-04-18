@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 
 @Component({
@@ -10,12 +9,21 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
   styleUrl: './add-workout.component.scss'
 })
 export class AddWorkoutComponent {
-  templateId: string | null;
+  db: Firestore = inject(Firestore);
+  isNewTemplate!: boolean;
+  templateName!: string;
 
-  constructor(private route: ActivatedRoute) { 
-    // console.log(this.route.snapshot.paramMap.get('templateId'));
-    this.templateId = this.route.snapshot.paramMap.get('templateId');
+  constructor() { 
+    this.isNewTemplate = history.state.isNewTemplate;
+    this.templateName = history.state.templateName;
 
-    //throw errro and redirect to error page if templateId isn't there.
+    //throw error and redirect to error page if templateId isn't there.
+  }
+
+  ngOnInit() {
+    /*
+    ifNewTemplate
+      templateId = squish down template name into camel casing
+    */
   }
 }

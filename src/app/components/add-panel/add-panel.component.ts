@@ -55,9 +55,15 @@ export class AddPanelComponent {
   }
 
   createTemplate() {
-    const templateLinkId = this.activeTab.value === 0 ? this.selectedTemplate : this.templateName;
+    const isNewTemplate = this.activeTab.value === 1;
+    const templateName = isNewTemplate ? this.templateName : this.selectedTemplate;
     //if templateLinkId is null, throw an error. shouldn't happen with proper validation in forms though
-    this.router.navigateByUrl(`/add/${templateLinkId}`);
+    this.router.navigateByUrl(`/add`, { 
+      state: {
+        isNewTemplate: isNewTemplate,
+        templateName: templateName
+      }
+    });
     /*
     if activeTab is on new template then we pass new template name to AddWorkoutComponent
     else we pass in the collection
