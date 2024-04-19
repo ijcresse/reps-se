@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
-import { AddWorkoutComponent } from './add-workout/add-workout.component';
+import { AddRouteComponent } from './add-route/add-route.component';
 
 export const routes: Routes = [
     {
@@ -10,8 +10,8 @@ export const routes: Routes = [
         title: 'Home page'
     },
     {
-        path: 'add/:templateId',
-        component: AddWorkoutComponent,
+        path: 'add',
+        component: AddRouteComponent,
         title: 'New Workout'
     }
 ];

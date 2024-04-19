@@ -1,0 +1,14 @@
+<p>add-route: {{ isExistingTemplate }}</p>
+<section class="header">
+    <h1 class="mat-title">{{ templateName }}</h1>
+</section>
+<section class="content">
+    @if (!templateDoc) {
+        Setting up your workout...
+    } @else {
+        <app-add-workout-panel [templateId]="templateDoc.id" (addWorkoutEvent)="addWorkout($event)"></app-add-workout-panel>
+    }
+    @for (workout of workouts$; track workout; let idx = $index) {
+        <app-workout-panel [workout]="workout" [index]="idx"></app-workout-panel>
+    }
+</section>

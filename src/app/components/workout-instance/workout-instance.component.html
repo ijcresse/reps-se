@@ -1,4 +1,78 @@
-<div *ngIf="instance$">
-    {{ instance$['user'] }} did {{ instance$['performance']['sets'] }} x {{ instance$['performance']['reps'] }} at 
-    {{ instance$['performance']['weight'] }} on {{ instance$['date'].toMillis() | date: 'dd/MM/yyyy '}}
-</div>
+<!-- <p>workout-instance works!</p>
+<mat-form-field>
+    <mat-label>User</mat-label>
+    <input matInput [(ngModel)]="workoutUser" />
+</mat-form-field>
+<mat-tab-group [selectedIndex]="activeTab.value" (selectedIndexChange)="activeTab.setValue($event)">
+    <mat-tab label="Aerobic">
+        <div>
+            <h4 class="mat-subheading-1">Hours</h4>
+            <button mat-stroked-button (click)="aerobic.hours = aerobic.hours - 1">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <mat-form-field>
+                <input matInput type="number" [(ngModel)]="aerobic.hours" />
+            </mat-form-field>
+            <button mat-stroked-button (click)="aerobic.hours = aerobic.hours + 1">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div>
+            <h4 class="mat-subheading-1">Minutes</h4>
+            <button mat-stroked-button (click)="aerobic.minutes = aerobic.minutes - 1">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <mat-form-field>
+                <input matInput type="number" [(ngModel)]="aerobic.minutes" />
+            </mat-form-field>
+            <button mat-stroked-button (click)="aerobic.minutes = aerobic.minutes + 1">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div>
+            <h4 class="mat-subheading-1">Notes</h4>
+            <mat-form-field>
+                <mat-label>Additional Context</mat-label>
+                <textarea matInput [(ngModel)]="aerobic.notes"></textarea>
+            </mat-form-field>
+        </div>
+    </mat-tab>
+    <mat-tab label="Anaerobic">
+        <div>
+            <h4 class="mat-subheading-1">Sets</h4>
+            <button mat-stroked-button (click)="anaerobic.sets = anaerobic.sets - 1">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <mat-form-field>
+                <input matInput type="number" [(ngModel)]="anaerobic.sets" />
+            </mat-form-field>
+            <button mat-stroked-button (click)="anaerobic.sets = anaerobic.sets + 1">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div>
+            <h4 class="mat-subheading-1">Reps</h4>
+            <button mat-stroked-button (click)="anaerobic.reps = anaerobic.reps - 1">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <mat-form-field>
+                <input matInput type="number" [(ngModel)]="anaerobic.reps" />
+            </mat-form-field>
+            <button mat-stroked-button (click)="anaerobic.reps = anaerobic.reps + 1">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div>
+            <h4 class="mat-subheading-1">Weight</h4>
+            <button mat-stroked-button (click)="anaerobic.weight = anaerobic.weight - 1">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <mat-form-field>
+                <input matInput type="number" [(ngModel)]="anaerobic.weight" />
+            </mat-form-field>
+            <button mat-stroked-button (click)="anaerobic.weight = anaerobic.weight + 1">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </mat-tab>
+</mat-tab-group> -->

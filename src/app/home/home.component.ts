@@ -12,7 +12,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 
-import { AddPanelComponent } from '../components/add-panel/add-panel.component';
+import { AddTemplatePanelComponent } from '../components/add-template-panel/add-template-panel.component';
 import { HistoryPanelComponent } from '../components/history-panel/history-panel.component';
 
 @Component({
@@ -27,7 +27,7 @@ import { HistoryPanelComponent } from '../components/history-panel/history-panel
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,
-    AddPanelComponent,
+    AddTemplatePanelComponent,
     HistoryPanelComponent
   ],
   templateUrl: './home.component.html',

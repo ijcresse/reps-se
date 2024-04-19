@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
-import { AddWorkoutComponent } from './add-workout/add-workout.component';
+import { AddRouteComponent } from './add-route/add-route.component';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import { AddWorkoutComponent } from './add-workout/add-workout.component';
     RouterModule,
     CommonModule,
     HomeComponent,
-    AddWorkoutComponent
+    AddRouteComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

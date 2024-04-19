@@ -14,7 +14,7 @@
                     <mat-form-field>
                         <mat-label>Existing Templates</mat-label>
                         <mat-select [(ngModel)]="selectedTemplate">
-                            <mat-option *ngFor="let template of templates$ | async" [value]="template.id">
+                            <mat-option *ngFor="let template of templates$ | async" [value]="template">
                                 {{ template.displayName }}
                             </mat-option>
                         </mat-select>
@@ -31,7 +31,9 @@
                                 <mat-icon>close</mat-icon>
                             </button>
                         }
+                        <!-- TODO -->
                         <!-- do want some validation here eventually. can't be empty, can't match existing template values. -->
+                        <!-- also can force alphabet and spaces. https://stackoverflow.com/a/52050335 -->
                     </mat-form-field>
                 </ng-template>
             </mat-tab>

@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-add-panel',
+  selector: 'app-add-template-panel',
   standalone: true,
   imports: [
     RouterModule,
@@ -30,11 +30,10 @@ import { FormsModule, FormControl } from '@angular/forms';
     MatInputModule,
     MatButtonModule
   ],
-  templateUrl: './add-panel.component.html',
-  styleUrl: './add-panel.component.scss'
+  templateUrl: './add-template-panel.component.html',
+  styleUrl: './add-template-panel.component.scss'
 })
-export class AddPanelComponent {
-
+export class AddTemplatePanelComponent {
   db: Firestore = inject(Firestore);
   templates$: Observable<any[]> = of();
   activeTab = new FormControl(0);
@@ -55,9 +54,16 @@ export class AddPanelComponent {
   }
 
   createTemplate() {
-    const templateLinkId = this.activeTab.value === 0 ? this.selectedTemplate : this.templateName;
+    const isExistingTemplate = this.activeTab.value === 0;
+    // const templateName = isExistingTemplate ? this.templateName : this.selectedTemplateId;
     //if templateLinkId is null, throw an error. shouldn't happen with proper validation in forms though
-    this.router.navigateByUrl(`/add/${templateLinkId}`);
+    this.router.navigateByUrl(`/add`, { 
+      state: {
+        isExistingTemplate: isExistingTemplate,
+        templateDoc: this.selectedTemplate,
+        templateName: this.templateName
+      }
+    });
     /*
     if activeTab is on new template then we pass new template name to AddWorkoutComponent
     else we pass in the collection

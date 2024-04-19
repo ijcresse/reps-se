@@ -4,6 +4,6 @@
         <mat-panel-description>{{ historyDoc.date.toMillis() | date: 'dd/MM/yyyy' }}</mat-panel-description>
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
-        <app-workout-instance *ngFor="let instanceRef of historyDoc.instanceRefs" [instanceRef]="instanceRef"></app-workout-instance>
+        <app-history-details *ngFor="let instanceRef of historyDoc.instanceRefs" [instanceRef]="instanceRef"></app-history-details>
     </ng-template>
 </mat-expansion-panel>

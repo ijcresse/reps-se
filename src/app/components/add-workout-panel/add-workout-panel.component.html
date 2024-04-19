@@ -1,0 +1,28 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            Add Workout
+        </mat-panel-title>
+        <mat-panel-description>
+            <mat-icon>add_circle</mat-icon>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
+    <ng-template matExpansionPanelContent>
+        <mat-form-field>
+            <mat-label>Workout Name</mat-label>
+            <input matInput required [(ngModel)]="workoutName" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Workout Type</mat-label>
+            <mat-select [(ngModel)]="selectedType">
+                <mat-option *ngFor="let option of workoutType" [value]="option.value">
+                    {{ option.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-template>
+    <mat-action-row>
+        <button mat-button color="primary" (click)="addWorkout()" [disabled]="!workoutName">Create</button>
+    </mat-action-row>
+</mat-expansion-panel>

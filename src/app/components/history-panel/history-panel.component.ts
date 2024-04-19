@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
-import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.component';
+import { HistoryDetailsComponent } from '../history-details/history-details.component';
 
 @Component({
   selector: 'app-history-panel',
@@ -10,7 +10,7 @@ import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.c
   imports: [
     CommonModule,
     MatExpansionModule,
-    WorkoutInstanceComponent
+    HistoryDetailsComponent
   ],
   templateUrl: './history-panel.component.html',
   styleUrl: './history-panel.component.scss'
