@@ -1,13 +1,33 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { CollectionReference, DocumentData, Query, collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
-import { Workout } from '../../workout.interface';
+import { 
+  DocumentData, 
+  Query, 
+  collection, 
+  getDocs, 
+  limit, 
+  orderBy, 
+  query
+} from 'firebase/firestore';
+
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+import { Workout, AerobicData, AnaerobicData } from '../../workout.interface';
+import { AerobicFieldsComponent } from '../aerobic-fields/aerobic-fields.component';
+import { AnaerobicFieldsComponent } from '../anaerobic-fields/anaerobic-fields.component';
 
 //contains an individual workout instance for a given workout partner.
 @Component({
   selector: 'app-workout-instance',
   standalone: true,
-  imports: [],
+  imports: [
+    AerobicFieldsComponent,
+    AnaerobicFieldsComponent
+  ],
   templateUrl: './workout-instance.component.html',
   styleUrl: './workout-instance.component.scss'
 })
@@ -27,40 +47,38 @@ export class WorkoutInstanceComponent {
   
   async ngOnInit() {
     const instancePath = `${this.userPath}/${this.user}/Instances`;
-    console.log('workout-instance path:', instancePath);
     const instanceCollection = collection(this.db, instancePath);
     const mostRecentInstance = query(instanceCollection,
       orderBy("date", "desc"),
       limit(1)
     )
+    this.loadInstance(mostRecentInstance);
   }
 
-  async loadInstance(instancePath: string, 
-                     instanceCollection: CollectionReference, 
-                     mostRecentInstance: Query<DocumentData, DocumentData>) {
+  async loadInstance(mostRecentInstance: Query<DocumentData, DocumentData>) {
     const instanceSnapshot = await getDocs(mostRecentInstance);
-    if (instanceSnapshot.empty) {
-      this.currentState = 'empty';
-      return;
+    if (!instanceSnapshot.empty) {
+      instanceSnapshot.forEach((doc) => {
+        if (doc.exists()) {
+          this.instanceData = doc.data();
+          this.instanceId = doc.id;
+          this.applyInstanceToUser(this.workout, this.instanceData, this.user);
+          // this.addInstanceData.emit(this.workout); //guess i don't need this?
+        }
+      })
     }
-    instanceSnapshot.forEach((doc) => {
-      if (doc.exists()) {
-        this.instanceData = doc.data();
-        this.instanceId = doc.id;
-        this.saveInstanceToUser(this.workout, this.instanceData, this.user);
-        // this.addInstanceData.emit(this.workout); //guess i don't need this?
-        this.currentState = 'loaded';
-      }
-    })
+    this.currentState = 'loaded';
   }
 
-  saveInstanceToUser(workout: Workout, instanceData: DocumentData, user: string) {
+  applyInstanceToUser(workout: Workout, instanceData: DocumentData, user: string) {
     switch(user) {
       case 'Ian':
         workout.ianData = instanceData;
+        console.log('loading instance data to ian')
         break;
       case 'Holly':
         workout.hollyData = instanceData;
+        console.log('loading instance data to holly')
         break;
       default:
         console.error('Could not determine appropriate user!');

@@ -1,15 +1,23 @@
 @if ( currentState === 'loading' ) {
     Loading instance data...   
-} @else if ( currentState === 'loaded' ) {
-    <!-- stuff to load in -->
-    {{ instanceId }}
-    {{ instanceData['performance'] }}
-    we got data, let's do stuff!
-} @else if ( currentState === 'empty' ) {
-    instanceData/id is empty, let's make a new workout!
-    <!-- starting anew -->
+} @else if ( currentState !== 'loaded' && currentState !== 'empty') {
+    Error! Sorry, something went wrong.
 } @else {
-    hey, error
+    @if ( workout.workoutData['type'] === 'aerobic') {
+        @if ( user === 'Ian' ) {
+            i
+            <!-- <app-aerobic-fields [aerobicData]="workout.ianData"></app-aerobic-fields> -->
+        } @else {
+            h
+            <!-- <app-aerobic-fields [aerobicData]="workout.hollyData"></app-aerobic-fields> -->
+        }
+    } @else {
+        @if ( user === 'Ian' ) {
+            <app-anaerobic-fields [anaerobicData]="workout.ianData"></app-anaerobic-fields>
+        } @else {
+            <app-anaerobic-fields [anaerobicData]="workout.hollyData"></app-anaerobic-fields>
+        }
+    }
 }
 <!-- <p>workout-instance works!</p>
 <mat-form-field>
