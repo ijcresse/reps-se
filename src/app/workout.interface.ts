@@ -9,9 +9,12 @@ export interface Workout {
 }
 
 export interface AerobicData {
-    hours: number,
-    minutes: number,
-    notes: string
+    date: Timestamp,
+    performance: {
+        hours: number,
+        minutes: number,
+        notes: string
+    }
 }
 
 export interface AnaerobicData {

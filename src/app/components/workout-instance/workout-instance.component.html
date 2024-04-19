@@ -3,18 +3,20 @@
 } @else if ( currentState !== 'loaded' && currentState !== 'empty') {
     Error! Sorry, something went wrong.
 } @else {
-    @if ( workout.workoutData['type'] === 'aerobic') {
+    @if ( workout.workoutData['type'] === 0) {
         @if ( user === 'Ian' ) {
-            i
-            <!-- <app-aerobic-fields [aerobicData]="workout.ianData"></app-aerobic-fields> -->
+            Ian:
+            <app-aerobic-fields [aerobicData]="workout.ianData"></app-aerobic-fields>
         } @else {
-            h
-            <!-- <app-aerobic-fields [aerobicData]="workout.hollyData"></app-aerobic-fields> -->
+            Holly:
+            <app-aerobic-fields [aerobicData]="workout.hollyData"></app-aerobic-fields>
         }
     } @else {
         @if ( user === 'Ian' ) {
+            Ian:
             <app-anaerobic-fields [anaerobicData]="workout.ianData"></app-anaerobic-fields>
         } @else {
+            Holly:
             <app-anaerobic-fields [anaerobicData]="workout.hollyData"></app-anaerobic-fields>
         }
     }
