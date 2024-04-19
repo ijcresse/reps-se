@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
-import { AddWorkoutComponent } from './add-workout/add-workout.component';
+import { AddRouteComponent } from './add-route/add-route.component';
 
 export const routes: Routes = [
     {
@@ -11,7 +11,7 @@ export const routes: Routes = [
     },
     {
         path: 'add',
-        component: AddWorkoutComponent,
+        component: AddRouteComponent,
         title: 'New Workout'
     }
 ];

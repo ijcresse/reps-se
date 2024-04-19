@@ -4,13 +4,13 @@ import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
 
 @Component({
-  selector: 'app-add-workout',
+  selector: 'app-add-route',
   standalone: true,
   imports: [],
-  templateUrl: './add-workout.component.html',
-  styleUrl: './add-workout.component.scss'
+  templateUrl: './add-route.component.html',
+  styleUrl: './add-route.component.scss'
 })
-export class AddWorkoutComponent {
+export class AddRouteComponent {
   db: Firestore = inject(Firestore);
   isExistingTemplate!: boolean;
   templateDoc;
