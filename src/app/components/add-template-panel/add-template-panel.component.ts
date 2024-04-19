@@ -34,7 +34,6 @@ import { FormsModule, FormControl } from '@angular/forms';
   styleUrl: './add-template-panel.component.scss'
 })
 export class AddTemplatePanelComponent {
-
   db: Firestore = inject(Firestore);
   templates$: Observable<any[]> = of();
   activeTab = new FormControl(0);

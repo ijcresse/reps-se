@@ -2,11 +2,14 @@ import { Component, inject } from '@angular/core';
 import { Firestore, collection, collectionData, DocumentReference } from '@angular/fire/firestore';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
+import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
 
 @Component({
   selector: 'app-add-route',
   standalone: true,
-  imports: [],
+  imports: [
+    AddWorkoutPanelComponent
+  ],
   templateUrl: './add-route.component.html',
   styleUrl: './add-route.component.scss'
 })
@@ -21,6 +24,7 @@ export class AddRouteComponent {
     this.isExistingTemplate = history.state.isExistingTemplate;
     if (this.isExistingTemplate) {
       this.templateDoc = history.state.templateDoc;
+      this.templateName = this.templateDoc.displayName;
     } else {
       this.templateName = history.state.templateName;
     }
