@@ -55,13 +55,14 @@ export class AddPanelComponent {
   }
 
   createTemplate() {
-    const isNewTemplate = this.activeTab.value === 1;
-    const templateName = isNewTemplate ? this.templateName : this.selectedTemplate;
+    const isExistingTemplate = this.activeTab.value === 0;
+    // const templateName = isExistingTemplate ? this.templateName : this.selectedTemplateId;
     //if templateLinkId is null, throw an error. shouldn't happen with proper validation in forms though
     this.router.navigateByUrl(`/add`, { 
       state: {
-        isNewTemplate: isNewTemplate,
-        templateName: templateName
+        isExistingTemplate: isExistingTemplate,
+        templateDoc: this.selectedTemplate,
+        templateName: this.templateName
       }
     });
     /*

@@ -14,7 +14,7 @@
                     <mat-form-field>
                         <mat-label>Existing Templates</mat-label>
                         <mat-select [(ngModel)]="selectedTemplate">
-                            <mat-option *ngFor="let template of templates$ | async" [value]="template.id">
+                            <mat-option *ngFor="let template of templates$ | async" [value]="template">
                                 {{ template.displayName }}
                             </mat-option>
                         </mat-select>
