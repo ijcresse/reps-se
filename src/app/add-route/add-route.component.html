@@ -4,4 +4,8 @@
 </section>
 <section class="content">
     <app-add-workout-panel [templateId]="templateDoc.id"></app-add-workout-panel>
+    <!-- <app-workout-panel *ngFor="let workout of workouts$" [workout]="workout"></app-workout-panel> -->
+    @for (workout of workouts$; track workout; let idx = $index) {
+        <app-workout-panel [workout]="workout" [index]="idx"></app-workout-panel>
+    }
 </section>

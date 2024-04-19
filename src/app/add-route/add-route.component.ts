@@ -1,16 +1,21 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Firestore, collection, collectionData, DocumentReference } from '@angular/fire/firestore';
-import { DocumentData, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { DocumentData, doc, getDocs, query, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
 
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
+import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
+import { Workout } from '../workout.interface';
 import { Util } from '../util';
 
 @Component({
   selector: 'app-add-route',
   standalone: true,
   imports: [
-    AddWorkoutPanelComponent
+    CommonModule,
+    AddWorkoutPanelComponent,
+    WorkoutPanelComponent
   ],
   templateUrl: './add-route.component.html',
   styleUrl: './add-route.component.scss'
@@ -20,8 +25,16 @@ export class AddRouteComponent {
   isExistingTemplate!: boolean;
   templateDoc;
   templateName;
-  // workouts$: Observable<any[]> = of();
-  workouts$: DocumentData[] = [];
+  workoutPath: string = "";
+  
+  //will be inserting into these arrays
+  // workouts$: DocumentData[] = [];
+  //each will have visible: boolean.
+  //updated by workout-panel (lazy loading)
+  //when we finally hit save, we iterate over this + get paths
+  // workoutInstances$: DocumentData[] = [];
+
+  workouts$: Workout[] = [];
 
   constructor() { 
     this.isExistingTemplate = history.state.isExistingTemplate;
@@ -39,15 +52,34 @@ export class AddRouteComponent {
     if (!this.isExistingTemplate) {
       this.createNewTemplate();
     } else {
-      const templateId = this.templateDoc.id;
-      const workoutCollection = collection(this.db, "WorkoutTemplates", templateId, "Workouts");
-
-      // this.workouts$ = collectionData(workoutCollection);
-      collectionData(workoutCollection)
-        .forEach((doc) => {
-          //if this works... i can emit to the add-route component and have it update workouts$ when add-workout-panel launches a new one.
-          this.workouts$.push(doc);
+      this.workoutPath = `WorkoutTemplates/${this.templateDoc.id}/Workouts`;
+      const workoutCollection = collection(this.db, this.workoutPath);
+      const workoutQuery = query(workoutCollection);
+      const workoutSnapshot = await getDocs(workoutQuery);
+      workoutSnapshot.forEach((doc) => {
+        // this.workouts$[doc.id] = {
+        //   workoutData: doc.data(),
+        //   instanceData: {}
+        // }
+        this.workouts$.push({
+          workoutId: doc.id,
+          workoutData: doc.data(),
+          instanceData: {}
         })
+        console.log(doc.id, doc.data());
+      })
+      
+      // collectionData(workoutCollection, { idField: 'id' })
+      //   .forEach((doc) => {
+      //     //if this works... i can emit to the add-route component and have it update workouts$ when add-workout-panel launches a new one.
+      //     console.log(doc);
+      //     // this.workouts$.push(doc);
+
+      //     this.workouts$[] = {
+      //       workoutData: doc,
+      //       instanceData: {}
+      //     }
+      //   })
     }
   }
 
@@ -65,6 +97,7 @@ export class AddRouteComponent {
       .then(() => {
         this.templateDoc = templateDoc
         this.templateDoc.id = templateId;
+        this.workoutPath = `WorkoutTemplates/${templateId}/Workouts`;
       });
   }
 }

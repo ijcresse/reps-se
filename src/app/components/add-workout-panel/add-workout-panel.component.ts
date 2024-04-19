@@ -1,7 +1,7 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
-import { DocumentReference, serverTimestamp } from 'firebase/firestore';
+import { DocumentData, DocumentReference, serverTimestamp } from 'firebase/firestore';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
@@ -37,7 +37,9 @@ import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.c
 })
 export class AddWorkoutPanelComponent {
   @Input() templateId!: string;
+  @Output() addedWorkoutEvent = new EventEmitter<DocumentData>();
   db: Firestore = inject(Firestore);
+
   workoutName: string = "";
   workoutType = [ 
     { value: 0, name: 'aerobic' },
@@ -45,41 +47,36 @@ export class AddWorkoutPanelComponent {
   ]
   selectedType = this.workoutType[0];
   workoutPath: string = "";
-  //move to instance
-  // activeTab = new FormControl(0);
 
   //TODO: these should be classes with converters
   //note: these are for the instance of the workout. move there.
-  aerobic = {
-    'hours': 0,
-    'minutes': 0,
-    'notes': ""
-  }
-  anaerobic = {
-    sets: 0,
-    reps: 0,
-    weight: 0
-  }
+  // aerobic = {
+  //   'hours': 0,
+  //   'minutes': 0,
+  //   'notes': ""
+  // }
+  // anaerobic = {
+  //   sets: 0,
+  //   reps: 0,
+  //   weight: 0
+  // }
 
   async addWorkout() {
-    const path = `WorkoutTemplates/${this.templateId}/Workouts/${Util.pascalCase(this.workoutName)}`;
+    const workoutId = Util.pascalCase(this.workoutName);
+    const path = `WorkoutTemplates/${this.templateId}/Workouts/${workoutId}`;
     const workoutDocRef: DocumentReference = doc(this.db, path);
     let workoutDoc = {
+      id: workoutId,
       date: serverTimestamp(),
       displayName: this.workoutName,
-      type: ''
+      type: this.selectedType
     };
-    console.log(path);
-    //move to instance
-    // if (this.activeTab.value === 0) {
-    //   workoutDoc.type = 'aerobic'
-    // } else {
-    //   workoutDoc.type = 'anaerobic'
-    // }
-    await setDoc(workoutDocRef, workoutDoc)
-      .then(() => {
-        this.workoutPath = path;
-      });
+    console.log('adding workout:', path, workoutDoc);
+    // await setDoc(workoutDocRef, workoutDoc)
+    //   .then(() => {
+    //     this.workoutPath = path;
+    //     this.addedWorkoutEvent.emit(workoutDoc);
+    //   });
     //TODO: somehow signal to add-route to insert new doc into the list.
   }
 }
