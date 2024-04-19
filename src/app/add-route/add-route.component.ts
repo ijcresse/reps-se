@@ -7,12 +7,14 @@ import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-wo
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
 import { Workout } from '../workout.interface';
 import { Util } from '../util';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-add-route',
   standalone: true,
   imports: [
     CommonModule,
+    MatButtonModule,
     AddWorkoutPanelComponent,
     WorkoutPanelComponent
   ],
@@ -44,18 +46,7 @@ export class AddRouteComponent {
     if (!this.isExistingTemplate) {
       this.createNewTemplate();
     } else {
-      this.workoutPath = `WorkoutTemplates/${this.templateDoc.id}/Workouts`;
-      const workoutCollection = collection(this.db, this.workoutPath);
-      const workoutQuery = query(workoutCollection);
-      const workoutSnapshot = await getDocs(workoutQuery);
-      workoutSnapshot.forEach((doc) => {
-        this.workouts$.push({
-          workoutId: doc.id,
-          workoutData: doc.data(),
-          instanceData: {}
-        })
-      })
-      console.log(this.workouts$);
+      this.loadExistingTemplate();
     }
   }
 
@@ -74,10 +65,32 @@ export class AddRouteComponent {
         this.templateDoc.id = templateId;
         this.workoutPath = `WorkoutTemplates/${templateId}/Workouts`;
       });
+    console.log(this.workoutPath);
+  }
+
+  async loadExistingTemplate() {
+    this.workoutPath = `WorkoutTemplates/${this.templateDoc.id}/Workouts`;
+    const workoutCollection = collection(this.db, this.workoutPath);
+    const workoutQuery = query(workoutCollection);
+    const workoutSnapshot = await getDocs(workoutQuery);
+    workoutSnapshot.forEach((doc) => {
+      this.workouts$.push({
+        workoutId: doc.id,
+        workoutData: doc.data(),
+        ianData: {},
+        hollyData: {},
+        performed: []
+      })
+    })
+    console.log(this.workoutPath);
   }
 
   addWorkout(workout: Workout) {
     this.workouts$.push(workout);
     console.log('added new workout', this.workouts$);
+  }
+
+  saveWorkout() {
+    console.log(this.workouts$);
   }
 }

@@ -61,11 +61,23 @@ export class AddWorkoutPanelComponent {
     const newWorkout: Workout = {
       workoutId: workoutId,
       workoutData: workoutDoc,
-      instanceData: {}
+      ianData: {},
+      hollyData: {},
+      performed: []
     }
     await setDoc(workoutDocRef, workoutDoc)
       .then(() => {
         this.addWorkoutEvent.emit(newWorkout)
+        //set up Users for the new workout
+        this.addUsersToWorkout(path);
       });
+  }
+
+  async addUsersToWorkout(workoutPath: string) {
+    const userDoc: DocumentData = {
+      latestDate: serverTimestamp()
+    };
+    await setDoc(doc(this.db, `${workoutPath}/Users/Ian`), userDoc);
+    await setDoc(doc(this.db, `${workoutPath}/Users/Holly`), userDoc);
   }
 }

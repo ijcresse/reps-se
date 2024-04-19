@@ -17,7 +17,4 @@ import { HistoryDetailsComponent } from '../history-details/history-details.comp
 })
 export class HistoryPanelComponent {
   @Input() historyDoc!: any;
-
-  instancesFetched: boolean = false;
-
 }
