@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Firestore, collection, collectionData, DocumentReference } from '@angular/fire/firestore';
-import { DocumentData, doc, getDocs, query, serverTimestamp, setDoc } from 'firebase/firestore';
-import { Observable, of } from 'rxjs';
+import { Firestore, collection } from '@angular/fire/firestore';
+import { doc, getDocs, query, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';

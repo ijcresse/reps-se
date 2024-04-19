@@ -1,10 +1,10 @@
 <mat-expansion-panel>
     <mat-expansion-panel-header>
         <mat-panel-title>
-            b
+            {{ workout.workoutData.displayName }}
         </mat-panel-title>
         <mat-panel-description>
-            a
+            {{ workout.workoutData.date.toMillis() | date: 'dd/MM/yyyy' }}
         </mat-panel-description>
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
