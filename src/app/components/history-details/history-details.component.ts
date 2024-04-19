@@ -17,6 +17,7 @@ import {
   styleUrl: './history-details.component.scss'
 })
 export class HistoryDetailsComponent {
+  // TODO: leverage the actual reference type for firestore
   @Input() instanceRef!: string;
   db: Firestore = inject(Firestore);
   instance$: DocumentData | undefined;

@@ -61,7 +61,7 @@ export class AddWorkoutPanelComponent {
     const newWorkout: Workout = {
       workoutId: workoutId,
       workoutData: workoutDoc,
-      instanceData: {}
+      instanceData: []
     }
     await setDoc(workoutDocRef, workoutDoc)
       .then(() => {

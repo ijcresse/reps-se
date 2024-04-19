@@ -9,6 +9,8 @@
         </mat-panel-description> -->
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
-        nothin yet
+        <!-- TODO: have users be fetched from db instead of hardcoded -->
+        <app-workout-instance [workoutPath]="workoutPath" [workout]="workout" user="Ian"></app-workout-instance>
+        <app-workout-instance [workoutPath]="workoutPath" [workout]="workout" user="Holly"></app-workout-instance>
     </ng-template>
 </mat-expansion-panel>

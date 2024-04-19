@@ -3,20 +3,24 @@ import { CommonModule } from '@angular/common';
 import { DocumentData } from 'firebase/firestore';
 
 import { MatExpansionModule } from '@angular/material/expansion';
+
 import { Workout } from '../../workout.interface';
+import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.component';
 
 @Component({
   selector: 'app-workout-panel',
   standalone: true,
   imports: [
     CommonModule,
-    MatExpansionModule
+    MatExpansionModule,
+    WorkoutInstanceComponent
   ],
   templateUrl: './workout-panel.component.html',
   styleUrl: './workout-panel.component.scss'
 })
 export class WorkoutPanelComponent {
   @Input() workout!: Workout;
+  @Input() workoutPath!: string;  
   @Input() index!: number;
 
   ngOnInit() {

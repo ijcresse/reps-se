@@ -1,4 +1,6 @@
-<div *ngIf="instance$">
+@if ( !instance$ ) {
+    Loading data...
+} @else {
     {{ instance$['user'] }} did {{ instance$['performance']['sets'] }} x {{ instance$['performance']['reps'] }} at 
     {{ instance$['performance']['weight'] }} on {{ instance$['date'].toMillis() | date: 'dd/MM/yyyy ' }}
-</div>
+}

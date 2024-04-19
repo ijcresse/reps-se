@@ -52,7 +52,7 @@ export class AddRouteComponent {
         this.workouts$.push({
           workoutId: doc.id,
           workoutData: doc.data(),
-          instanceData: {}
+          instanceData: []
         })
       })
       console.log(this.workouts$);

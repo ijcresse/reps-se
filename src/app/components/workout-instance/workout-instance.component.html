@@ -1,3 +1,16 @@
+@if ( currentState === states[1] ) {
+    Loading instance data...   
+} @else if ( currentState === states[2] ) {
+    <!-- stuff to load in -->
+    {{ instanceId }}
+    {{ instanceData['performance'] }}
+    we got data, let's do stuff!
+} @else if ( currentState === states[3] ) {
+    instanceData/id is empty, let's make a new workout!
+    <!-- starting anew -->
+} @else {
+    hey, error
+}
 <!-- <p>workout-instance works!</p>
 <mat-form-field>
     <mat-label>User</mat-label>
