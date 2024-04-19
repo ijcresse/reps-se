@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +25,8 @@ import { DocumentData, serverTimestamp } from 'firebase/firestore';
   styleUrl: './anaerobic-fields.component.scss'
 })
 export class AnaerobicFieldsComponent {
-  @Input() anaerobicData!: AnaerobicData | DocumentData;
+  @Input() anaerobicData!: DocumentData;
+  @Output() anaerobicDataChange:EventEmitter<DocumentData> = new EventEmitter<DocumentData>();
 
   ngOnInit() {
     if (!Object.hasOwn(this.anaerobicData, 'performance')) {
@@ -38,5 +39,9 @@ export class AnaerobicFieldsComponent {
         }
       }
     }
+  }
+
+  updateFields() {
+    this.anaerobicDataChange.emit(this.anaerobicData);
   }
 }

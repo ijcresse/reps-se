@@ -13,6 +13,7 @@ export interface AerobicData {
     performance: {
         hours: number,
         minutes: number,
+        miles: number,
         notes: string
     }
 }

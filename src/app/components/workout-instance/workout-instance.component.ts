@@ -10,13 +10,7 @@ import {
   query
 } from 'firebase/firestore';
 
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-
-import { Workout, AerobicData, AnaerobicData } from '../../workout.interface';
+import { Workout } from '../../workout.interface';
 import { AerobicFieldsComponent } from '../aerobic-fields/aerobic-fields.component';
 import { AnaerobicFieldsComponent } from '../anaerobic-fields/anaerobic-fields.component';
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +25,8 @@ import { DocumentData, serverTimestamp } from 'firebase/firestore';
   styleUrl: './aerobic-fields.component.scss'
 })
 export class AerobicFieldsComponent {
-  @Input() aerobicData!: AerobicData | DocumentData;
+  @Input() aerobicData!: DocumentData;
+  @Output() aerobicDataChange:EventEmitter<DocumentData> = new EventEmitter<DocumentData>();
 
   ngOnInit() {
     if (!Object.hasOwn(this.aerobicData, 'performance')) {
@@ -34,10 +35,16 @@ export class AerobicFieldsComponent {
         performance: {
           hours: 0,
           minutes: 0,
+          miles: 0,
           notes: ""
         }
       }
     }
+  }
+
+  updateFields() {
+    console.log('updateFields', this.aerobicData);
+    this.aerobicDataChange.emit(this.aerobicData);
   }
 
 }
