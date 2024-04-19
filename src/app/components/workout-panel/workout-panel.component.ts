@@ -20,7 +20,7 @@ export class WorkoutPanelComponent {
   @Input() index!: number;
 
   ngOnInit() {
-    console.log(this.index, this.workout);
+    console.log('workoutpanel#', this.index, this.workout);
   }
 }
 

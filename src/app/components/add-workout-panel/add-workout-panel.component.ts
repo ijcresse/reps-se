@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Util } from '../../util';
+import { Workout } from '../../workout.interface';
 import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.component';
 
 @Component({
@@ -37,7 +38,7 @@ import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.c
 })
 export class AddWorkoutPanelComponent {
   @Input() templateId!: string;
-  @Output() addedWorkoutEvent = new EventEmitter<DocumentData>();
+  @Output() addWorkoutEvent = new EventEmitter<Workout>();
   db: Firestore = inject(Firestore);
 
   workoutName: string = "";
@@ -46,37 +47,25 @@ export class AddWorkoutPanelComponent {
     { value: 1, name: 'anaerobic' }
   ]
   selectedType = this.workoutType[0];
-  workoutPath: string = "";
-
-  //TODO: these should be classes with converters
-  //note: these are for the instance of the workout. move there.
-  // aerobic = {
-  //   'hours': 0,
-  //   'minutes': 0,
-  //   'notes': ""
-  // }
-  // anaerobic = {
-  //   sets: 0,
-  //   reps: 0,
-  //   weight: 0
-  // }
 
   async addWorkout() {
     const workoutId = Util.pascalCase(this.workoutName);
     const path = `WorkoutTemplates/${this.templateId}/Workouts/${workoutId}`;
     const workoutDocRef: DocumentReference = doc(this.db, path);
-    let workoutDoc = {
+    const workoutDoc: DocumentData = {
       id: workoutId,
       date: serverTimestamp(),
       displayName: this.workoutName,
       type: this.selectedType
     };
-    console.log('adding workout:', path, workoutDoc);
-    // await setDoc(workoutDocRef, workoutDoc)
-    //   .then(() => {
-    //     this.workoutPath = path;
-    //     this.addedWorkoutEvent.emit(workoutDoc);
-    //   });
-    //TODO: somehow signal to add-route to insert new doc into the list.
+    const newWorkout: Workout = {
+      workoutId: workoutId,
+      workoutData: workoutDoc,
+      instanceData: {}
+    }
+    await setDoc(workoutDocRef, workoutDoc)
+      .then(() => {
+        this.addWorkoutEvent.emit(newWorkout)
+      });
   }
 }

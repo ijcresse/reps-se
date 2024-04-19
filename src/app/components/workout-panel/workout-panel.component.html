@@ -1,11 +1,12 @@
 <mat-expansion-panel>
     <mat-expansion-panel-header>
         <mat-panel-title>
-            {{ workout.workoutData.displayName }}
+            {{ workout.workoutData['displayName'] }}
         </mat-panel-title>
-        <mat-panel-description>
-            {{ workout.workoutData.date.toMillis() | date: 'dd/MM/yyyy' }}
-        </mat-panel-description>
+        <!-- TODO: fix a bug where the server hasn't set the timestamp object properly yet -->
+        <!-- <mat-panel-description>
+            {{ workout.workoutData['date'].toMillis() | date: 'dd/MM/yyyy' }}
+        </mat-panel-description> -->
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
         nothin yet

@@ -25,13 +25,6 @@ export class AddRouteComponent {
   templateDoc;
   templateName;
   workoutPath: string = "";
-  
-  //will be inserting into these arrays
-  // workouts$: DocumentData[] = [];
-  //each will have visible: boolean.
-  //updated by workout-panel (lazy loading)
-  //when we finally hit save, we iterate over this + get paths
-  // workoutInstances$: DocumentData[] = [];
 
   workouts$: Workout[] = [];
 
@@ -56,36 +49,19 @@ export class AddRouteComponent {
       const workoutQuery = query(workoutCollection);
       const workoutSnapshot = await getDocs(workoutQuery);
       workoutSnapshot.forEach((doc) => {
-        // this.workouts$[doc.id] = {
-        //   workoutData: doc.data(),
-        //   instanceData: {}
-        // }
         this.workouts$.push({
           workoutId: doc.id,
           workoutData: doc.data(),
           instanceData: {}
         })
-        console.log(doc.id, doc.data());
       })
-      
-      // collectionData(workoutCollection, { idField: 'id' })
-      //   .forEach((doc) => {
-      //     //if this works... i can emit to the add-route component and have it update workouts$ when add-workout-panel launches a new one.
-      //     console.log(doc);
-      //     // this.workouts$.push(doc);
-
-      //     this.workouts$[] = {
-      //       workoutData: doc,
-      //       instanceData: {}
-      //     }
-      //   })
+      console.log(this.workouts$);
     }
   }
 
   //performed here because user has committed to a new page
   async createNewTemplate() {
     const templateId: string = Util.pascalCase(this.templateName);
-    console.log('transforming', this.templateName, 'to pascalcase:', templateId);
     const templateDocRef = doc(this.db, "WorkoutTemplates", templateId);
     const templateDoc = {
       displayName: this.templateName,
@@ -98,5 +74,10 @@ export class AddRouteComponent {
         this.templateDoc.id = templateId;
         this.workoutPath = `WorkoutTemplates/${templateId}/Workouts`;
       });
+  }
+
+  addWorkout(workout: Workout) {
+    this.workouts$.push(workout);
+    console.log('added new workout', this.workouts$);
   }
 }
