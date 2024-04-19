@@ -18,17 +18,25 @@ export class WorkoutInstanceComponent {
   @Output() addInstanceData = new EventEmitter<Workout>();
 
   db: Firestore = inject(Firestore);
-  instanceData: DocumentData = {};
-  instanceId: string = "";
   //TODO: figure out enum in angular template
   //error, loading, loaded, empty respectively
   states: number[] = [-1, 0, 1, 2];
-  currentState: number = 0;
+
+  instancePath: string;
+  instanceData: DocumentData;
+  instanceId: string;
+  currentState: number;
+
+  constructor() {
+    this.instancePath = `${this.workoutPath}/Users/${this.user}`;
+    this.instanceData = {};
+    this.instanceId = "";
+    this.currentState = 0;
+  }
 
   async ngOnInit() {
-    const instanceCollection = collection(this.db, this.workoutPath);
-    const mostRecentInstance = query(instanceCollection, 
-      where("user", "==", this.user),
+    const instanceCollection = collection(this.db, `${this.workoutPath}/Users/${this.user}`);
+    const mostRecentInstance = query(instanceCollection,
       orderBy("date", "desc"),
       limit(1)
     )
@@ -41,7 +49,6 @@ export class WorkoutInstanceComponent {
       workoutUpdate.instanceData.push(this.instanceData); //does this update it?
       // this.addInstanceData.emit(workoutUpdate);
     })
-    console.log(this.instanceId);
     this.updateState();
   }
 
