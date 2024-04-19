@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentData, collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { CollectionReference, DocumentData, Query, collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
 import { Workout } from '../../workout.interface';
 
 //contains an individual workout instance for a given workout partner.
@@ -12,7 +12,7 @@ import { Workout } from '../../workout.interface';
   styleUrl: './workout-instance.component.scss'
 })
 export class WorkoutInstanceComponent {
-  @Input() workoutPath!: string;
+  @Input() userPath!: string;
   @Input() workout!: Workout;
   @Input() user!: string;
   @Output() addInstanceData = new EventEmitter<Workout>();
@@ -20,39 +20,50 @@ export class WorkoutInstanceComponent {
   db: Firestore = inject(Firestore);
   //TODO: figure out enum in angular template
   //error, loading, loaded, empty respectively
-  states: number[] = [-1, 0, 1, 2];
 
-  instancePath: string;
-  instanceData: DocumentData;
-  instanceId: string;
-  currentState: number;
-
-  constructor() {
-    this.instancePath = `${this.workoutPath}/Users/${this.user}`;
-    this.instanceData = {};
-    this.instanceId = "";
-    this.currentState = 0;
-  }
-
+  instanceData: DocumentData = {};
+  instanceId: string = "";
+  currentState: string = "loading";
+  
   async ngOnInit() {
-    const instanceCollection = collection(this.db, `${this.workoutPath}/Users/${this.user}`);
+    const instancePath = `${this.userPath}/${this.user}/Instances`;
+    console.log('workout-instance path:', instancePath);
+    const instanceCollection = collection(this.db, instancePath);
     const mostRecentInstance = query(instanceCollection,
       orderBy("date", "desc"),
       limit(1)
     )
-    const instanceSnapshot = await getDocs(mostRecentInstance);
-    instanceSnapshot.forEach((doc) => {
-      this.instanceData = doc.data();
-      this.instanceId = doc.id;
-      console.log(this.user, this.instanceData);
-      var workoutUpdate = this.workout;
-      workoutUpdate.instanceData.push(this.instanceData); //does this update it?
-      // this.addInstanceData.emit(workoutUpdate);
-    })
-    this.updateState();
   }
 
-  updateState() {
-    this.currentState = this.instanceId ? 2 : 3;
+  async loadInstance(instancePath: string, 
+                     instanceCollection: CollectionReference, 
+                     mostRecentInstance: Query<DocumentData, DocumentData>) {
+    const instanceSnapshot = await getDocs(mostRecentInstance);
+    if (instanceSnapshot.empty) {
+      this.currentState = 'empty';
+      return;
+    }
+    instanceSnapshot.forEach((doc) => {
+      if (doc.exists()) {
+        this.instanceData = doc.data();
+        this.instanceId = doc.id;
+        this.saveInstanceToUser(this.workout, this.instanceData, this.user);
+        // this.addInstanceData.emit(this.workout); //guess i don't need this?
+        this.currentState = 'loaded';
+      }
+    })
+  }
+
+  saveInstanceToUser(workout: Workout, instanceData: DocumentData, user: string) {
+    switch(user) {
+      case 'Ian':
+        workout.ianData = instanceData;
+        break;
+      case 'Holly':
+        workout.hollyData = instanceData;
+        break;
+      default:
+        console.error('Could not determine appropriate user!');
+    }
   }
 }

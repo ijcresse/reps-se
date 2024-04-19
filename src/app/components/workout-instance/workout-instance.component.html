@@ -1,11 +1,11 @@
-@if ( currentState === states[1] ) {
+@if ( currentState === 'loading' ) {
     Loading instance data...   
-} @else if ( currentState === states[2] ) {
+} @else if ( currentState === 'loaded' ) {
     <!-- stuff to load in -->
     {{ instanceId }}
     {{ instanceData['performance'] }}
     we got data, let's do stuff!
-} @else if ( currentState === states[3] ) {
+} @else if ( currentState === 'empty' ) {
     instanceData/id is empty, let's make a new workout!
     <!-- starting anew -->
 } @else {

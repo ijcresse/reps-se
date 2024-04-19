@@ -7,6 +7,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { Workout } from '../../workout.interface';
 import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.component';
 
+//simple containing expansionpanel for individual workout instances within.
 @Component({
   selector: 'app-workout-panel',
   standalone: true,
@@ -23,8 +24,10 @@ export class WorkoutPanelComponent {
   @Input() workoutPath!: string;  
   @Input() index!: number;
 
+  userPath: string = "";
+
   ngOnInit() {
-    console.log('workoutpanel#', this.index, this.workout);
+    this.userPath = `${this.workoutPath}/${this.workout.workoutId}/Users`;
   }
 }
 

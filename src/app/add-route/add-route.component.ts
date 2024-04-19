@@ -44,18 +44,7 @@ export class AddRouteComponent {
     if (!this.isExistingTemplate) {
       this.createNewTemplate();
     } else {
-      this.workoutPath = `WorkoutTemplates/${this.templateDoc.id}/Workouts`;
-      const workoutCollection = collection(this.db, this.workoutPath);
-      const workoutQuery = query(workoutCollection);
-      const workoutSnapshot = await getDocs(workoutQuery);
-      workoutSnapshot.forEach((doc) => {
-        this.workouts$.push({
-          workoutId: doc.id,
-          workoutData: doc.data(),
-          instanceData: []
-        })
-      })
-      console.log(this.workouts$);
+      this.loadExistingTemplate();
     }
   }
 
@@ -74,6 +63,24 @@ export class AddRouteComponent {
         this.templateDoc.id = templateId;
         this.workoutPath = `WorkoutTemplates/${templateId}/Workouts`;
       });
+    console.log(this.workoutPath);
+  }
+
+  async loadExistingTemplate() {
+    this.workoutPath = `WorkoutTemplates/${this.templateDoc.id}/Workouts`;
+    const workoutCollection = collection(this.db, this.workoutPath);
+    const workoutQuery = query(workoutCollection);
+    const workoutSnapshot = await getDocs(workoutQuery);
+    workoutSnapshot.forEach((doc) => {
+      this.workouts$.push({
+        workoutId: doc.id,
+        workoutData: doc.data(),
+        ianData: {},
+        hollyData: {},
+        performed: []
+      })
+    })
+    console.log(this.workoutPath);
   }
 
   addWorkout(workout: Workout) {
