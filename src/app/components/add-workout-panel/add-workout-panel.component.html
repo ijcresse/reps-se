@@ -7,86 +7,25 @@
             <mat-icon>add_circle</mat-icon>
         </mat-panel-description>
     </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
     <ng-template matExpansionPanelContent>
         <mat-form-field>
             <mat-label>Workout Name</mat-label>
-            <input matInput [(ngModel)]="workoutName" />
+            <input matInput required [(ngModel)]="workoutName" />
         </mat-form-field>
-        <mat-tab-group [selectedIndex]="activeTab.value" (selectedIndexChange)="activeTab.setValue($event)">
-            <mat-tab label="Aerobic">
-                <div>
-                    <h4 class="mat-subheading-1">Hours</h4>
-                    <button mat-stroked-button (click)="aerobic.hours = aerobic.hours - 1">
-                        <mat-icon>remove</mat-icon>
-                    </button>
-                    <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="aerobic.hours" />
-                    </mat-form-field>
-                    <button mat-stroked-button (click)="aerobic.hours = aerobic.hours + 1">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </div>
-                <div>
-                    <h4 class="mat-subheading-1">Minutes</h4>
-                    <button mat-stroked-button (click)="aerobic.minutes = aerobic.minutes - 1">
-                        <mat-icon>remove</mat-icon>
-                    </button>
-                    <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="aerobic.minutes" />
-                    </mat-form-field>
-                    <button mat-stroked-button (click)="aerobic.minutes = aerobic.minutes + 1">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </div>
-                <div>
-                    <h4 class="mat-subheading-1">Notes</h4>
-                    <mat-form-field>
-                        <mat-label>Additional Context</mat-label>
-                        <textarea matInput [(ngModel)]="aerobic.notes"></textarea>
-                    </mat-form-field>
-                </div>
-            </mat-tab>
-            <mat-tab label="Anaerobic">
-                <div>
-                    <h4 class="mat-subheading-1">Sets</h4>
-                    <button mat-stroked-button (click)="anaerobic.sets = anaerobic.sets - 1">
-                        <mat-icon>remove</mat-icon>
-                    </button>
-                    <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="anaerobic.sets" />
-                    </mat-form-field>
-                    <button mat-stroked-button (click)="anaerobic.sets = anaerobic.sets + 1">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </div>
-                <div>
-                    <h4 class="mat-subheading-1">Reps</h4>
-                    <button mat-stroked-button (click)="anaerobic.reps = anaerobic.reps - 1">
-                        <mat-icon>remove</mat-icon>
-                    </button>
-                    <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="anaerobic.reps" />
-                    </mat-form-field>
-                    <button mat-stroked-button (click)="anaerobic.reps = anaerobic.reps + 1">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </div>
-                <div>
-                    <h4 class="mat-subheading-1">Weight</h4>
-                    <button mat-stroked-button (click)="anaerobic.weight = anaerobic.weight - 1">
-                        <mat-icon>remove</mat-icon>
-                    </button>
-                    <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="anaerobic.weight" />
-                    </mat-form-field>
-                    <button mat-stroked-button (click)="anaerobic.weight = anaerobic.weight + 1">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
+        <mat-form-field>
+            <mat-label>Workout Type</mat-label>
+            <!-- figure this out when you get back -->
+            <mat-select [(ngModel)]="selectedType">
+                <mat-option *ngFor="let option of workoutType" [value]="option.value">
+                    {{ option.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- move to workout-panel -->
+        <!-- <app-workout-instance [workoutPath]="workoutPath"></app-workout-instance> -->
     </ng-template>
     <mat-action-row>
-        <button mat-button color="primary" (click)="addWorkout()">Create</button>
+        <button mat-button color="primary" (click)="addWorkout()" [disabled]="!workoutName">Create</button>
     </mat-action-row>
 </mat-expansion-panel>

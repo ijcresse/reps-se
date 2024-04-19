@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Firestore, collection, collectionData, DocumentReference } from '@angular/fire/firestore';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { DocumentData, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
+
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
+import { Util } from '../util';
 
 @Component({
   selector: 'app-add-route',
@@ -18,7 +20,8 @@ export class AddRouteComponent {
   isExistingTemplate!: boolean;
   templateDoc;
   templateName;
-  workouts$: Observable<any[]> = of();
+  // workouts$: Observable<any[]> = of();
+  workouts$: DocumentData[] = [];
 
   constructor() { 
     this.isExistingTemplate = history.state.isExistingTemplate;
@@ -38,25 +41,30 @@ export class AddRouteComponent {
     } else {
       const templateId = this.templateDoc.id;
       const workoutCollection = collection(this.db, "WorkoutTemplates", templateId, "Workouts");
-      this.workouts$ = collectionData(workoutCollection);
+
+      // this.workouts$ = collectionData(workoutCollection);
+      collectionData(workoutCollection)
+        .forEach((doc) => {
+          //if this works... i can emit to the add-route component and have it update workouts$ when add-workout-panel launches a new one.
+          this.workouts$.push(doc);
+        })
     }
   }
 
+  //performed here because user has committed to a new page
   async createNewTemplate() {
-    const templateId: string = this.pascalCase(this.templateName);
+    const templateId: string = Util.pascalCase(this.templateName);
     console.log('transforming', this.templateName, 'to pascalcase:', templateId);
     const templateDocRef = doc(this.db, "WorkoutTemplates", templateId);
-    const templatesDoc = {
+    const templateDoc = {
       displayName: this.templateName,
       color: "tbd",
       latestWorkout: serverTimestamp()
     }
-    await setDoc(templateDocRef, templatesDoc);
-  }
-
-  pascalCase(s: string) {
-    return s.replace(/(\w)(\w*)/g, function(g0,g1,g2) {
-      return g1.toUpperCase() + g2.toLowerCase();
-    });
+    await setDoc(templateDocRef, templateDoc)
+      .then(() => {
+        this.templateDoc = templateDoc
+        this.templateDoc.id = templateId;
+      });
   }
 }
