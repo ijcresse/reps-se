@@ -3,26 +3,18 @@ import { DocumentData, Timestamp } from "firebase/firestore"
 export interface Workout {
     workoutId: string
     workoutData: DocumentData,
-    ianData: DocumentData,
-    hollyData: DocumentData,
-    performed: string[]
+    userPerformance: UserPerformance,
 }
 
-export interface AerobicData {
-    date: Timestamp,
-    performance: {
-        hours: number,
-        minutes: number,
-        miles: number,
-        notes: string
+export interface UserPerformance {
+    [index: string]: {
+        performed: boolean,
+        instanceData: DocumentData
     }
 }
 
-export interface AnaerobicData {
-    date: Timestamp,
-    performance: {
-        sets: number,
-        reps: number,
-        weight: number
-    }
+export interface HistoryInstance {
+    user: string,
+    instanceRef: string,
+    workoutName: string
 }

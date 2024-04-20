@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { AerobicData } from '../../workout.interface';
 import { DocumentData, serverTimestamp } from 'firebase/firestore';
 
 @Component({
@@ -29,8 +28,8 @@ export class AerobicFieldsComponent {
   @Output() aerobicDataChange:EventEmitter<DocumentData> = new EventEmitter<DocumentData>();
 
   ngOnInit() {
-    if (!Object.hasOwn(this.aerobicData, 'performance')) {
-      this.aerobicData = {
+    if (!Object.hasOwn(this.aerobicData['instanceData'], 'performance')) {
+      this.aerobicData['instanceData'] = {
         date: serverTimestamp(),
         performance: {
           hours: 0,
@@ -43,7 +42,7 @@ export class AerobicFieldsComponent {
   }
 
   updateFields() {
-    console.log('updateFields', this.aerobicData);
+    this.aerobicData['performed'] = true;
     this.aerobicDataChange.emit(this.aerobicData);
   }
 

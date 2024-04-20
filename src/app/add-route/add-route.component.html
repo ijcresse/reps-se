@@ -1,7 +1,6 @@
-<p>add-route: {{ isExistingTemplate }}</p>
 <section class="header">
     <h1 class="mat-title">{{ templateName }}</h1>
-    <button mat-button color="primary" (click)="saveWorkout()">Complete {{ templateName }} Workout</button>
+    <button mat-button color="primary" (click)="finishWorkout()">Complete {{ templateName }} Workout</button>
 </section>
 <section class="content">
     @if (!templateDoc) {

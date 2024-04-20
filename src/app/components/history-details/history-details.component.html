@@ -1,6 +1,9 @@
 @if ( !instance$ ) {
     Loading data...
 } @else {
-    {{ instance$['user'] }} did {{ instance$['performance']['sets'] }} x {{ instance$['performance']['reps'] }} at 
-    {{ instance$['performance']['weight'] }} on {{ instance$['date'].toMillis() | date: 'dd/MM/yyyy ' }}
+    <h3 class="mat-subheading-2">{{ instance$['workoutName'] }}: {{ instance$['user'] }}</h3>
+    <mat-divider></mat-divider>
+    <div *ngFor="let history of instanceHistory$['performance'] | keyvalue">
+        <h4 class="mat-subheading-1">{{ history.key }}: {{ history.value }}</h4>
+    </div>
 }
