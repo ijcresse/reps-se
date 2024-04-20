@@ -10,7 +10,7 @@ import {
   query
 } from 'firebase/firestore';
 
-import { Workout } from '../../workout.interface';
+import { Workout, UserPerformance } from '../../workout.interface';
 import { AerobicFieldsComponent } from '../aerobic-fields/aerobic-fields.component';
 import { AnaerobicFieldsComponent } from '../anaerobic-fields/anaerobic-fields.component';
 
@@ -29,13 +29,14 @@ export class WorkoutInstanceComponent {
   @Input() userPath!: string;
   @Input() workout!: Workout;
   @Input() user!: string;
-  @Output() addInstanceData = new EventEmitter<Workout>();
+  // @Output() addInstanceData = new EventEmitter<Workout>();
 
   db: Firestore = inject(Firestore);
   //TODO: figure out enum in angular template
   //error, loading, loaded, empty respectively
 
-  instanceData: DocumentData = {};
+  // instanceData: DocumentData = {};
+  
   instanceId: string = "";
   currentState: string = "loading";
   
@@ -54,28 +55,13 @@ export class WorkoutInstanceComponent {
     if (!instanceSnapshot.empty) {
       instanceSnapshot.forEach((doc) => {
         if (doc.exists()) {
-          this.instanceData = doc.data();
           this.instanceId = doc.id;
-          this.applyInstanceToUser(this.workout, this.instanceData, this.user);
+          this.workout.userPerformance[this.user].instanceData = doc.data();
+          // this.applyInstanceToUser(this.workout, this.instanceData, this.user);
           // this.addInstanceData.emit(this.workout); //guess i don't need this?
         }
       })
     }
     this.currentState = 'loaded';
-  }
-
-  applyInstanceToUser(workout: Workout, instanceData: DocumentData, user: string) {
-    switch(user) {
-      case 'Ian':
-        workout.ianData = instanceData;
-        console.log('loading instance data to ian')
-        break;
-      case 'Holly':
-        workout.hollyData = instanceData;
-        console.log('loading instance data to holly')
-        break;
-      default:
-        console.error('Could not determine appropriate user!');
-    }
   }
 }

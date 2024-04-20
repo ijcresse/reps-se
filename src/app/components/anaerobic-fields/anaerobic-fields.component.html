@@ -2,37 +2,37 @@
 <mat-divider></mat-divider>
 <div>
     <h4 class="mat-subheading-1">Sets</h4>
-    <button mat-stroked-button (click)="anaerobicData['performance'].sets = anaerobicData['performance'].sets - 1">
+    <button mat-stroked-button (click)="anaerobicData['instanceData']['performance'].sets = anaerobicData['instanceData']['performance'].sets - 1">
         <mat-icon>remove</mat-icon>
     </button>
     <mat-form-field>
-        <input matInput type="number" [(ngModel)]="anaerobicData['performance'].sets" />
+        <input matInput type="number" [(ngModel)]="anaerobicData['instanceData']['performance'].sets" />
     </mat-form-field>
-    <button mat-stroked-button (click)="anaerobicData['performance'].sets = anaerobicData['performance'].sets + 1">
+    <button mat-stroked-button (click)="anaerobicData['instanceData']['performance'].sets = anaerobicData['instanceData']['performance'].sets + 1">
         <mat-icon>add</mat-icon>
     </button>
 </div>
 <div>
     <h4 class="mat-subheading-1">Reps</h4>
-    <button mat-stroked-button (click)="anaerobicData['performance'].reps = anaerobicData['performance'].reps - 1">
+    <button mat-stroked-button (click)="anaerobicData['instanceData']['performance'].reps = anaerobicData['instanceData']['performance'].reps - 1">
         <mat-icon>remove</mat-icon>
     </button>
     <mat-form-field>
-        <input matInput type="number" [(ngModel)]="anaerobicData['performance'].reps" />
+        <input matInput type="number" [(ngModel)]="anaerobicData['instanceData']['performance'].reps" />
     </mat-form-field>
-    <button mat-stroked-button (click)="anaerobicData['performance'].reps = anaerobicData['performance'].reps + 1">
+    <button mat-stroked-button (click)="anaerobicData['instanceData']['performance'].reps = anaerobicData['instanceData']['performance'].reps + 1">
         <mat-icon>add</mat-icon>
     </button>
 </div>
 <div>
     <h4 class="mat-subheading-1">Weight</h4>
-    <button mat-stroked-button (click)="anaerobicData['performance'].weight = anaerobicData['performance'].weight - 1">
+    <button mat-stroked-button (click)="anaerobicData['instanceData']['performance'].weight = anaerobicData['instanceData']['performance'].weight - 1">
         <mat-icon>remove</mat-icon>
     </button>
     <mat-form-field>
-        <input matInput type="number" [(ngModel)]="anaerobicData['performance'].weight" />
+        <input matInput type="number" [(ngModel)]="anaerobicData['instanceData']['performance'].weight" />
     </mat-form-field>
-    <button mat-stroked-button (click)="anaerobicData['performance'].weight = anaerobicData['performance'].weight + 1">
+    <button mat-stroked-button (click)="anaerobicData['instanceData']['performance'].weight = anaerobicData['instanceData']['performance'].weight + 1">
         <mat-icon>add</mat-icon>
     </button>
 </div>

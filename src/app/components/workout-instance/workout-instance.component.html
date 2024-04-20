@@ -4,20 +4,8 @@
     Error! Sorry, something went wrong.
 } @else {
     @if ( workout.workoutData['type'] === 0) {
-        @if ( user === 'Ian' ) {
-            Ian:
-            <app-aerobic-fields [(aerobicData)]="workout.ianData"></app-aerobic-fields>
-        } @else {
-            Holly:
-            <app-aerobic-fields [(aerobicData)]="workout.hollyData"></app-aerobic-fields>
-        }
+        <app-aerobic-fields ng-repeat="(user) in workout.userPerformance" [(aerobicData)]="workout.userPerformance[user]"></app-aerobic-fields>
     } @else {
-        @if ( user === 'Ian' ) {
-            Ian:
-            <app-anaerobic-fields [(anaerobicData)]="workout.ianData"></app-anaerobic-fields>
-        } @else {
-            Holly:
-            <app-anaerobic-fields [(anaerobicData)]="workout.hollyData"></app-anaerobic-fields>
-        }
+        <app-anaerobic-fields ng-repeat="(user) in workout.userPerformance" [(anaerobicData)]="workout.userPerformance[user]"></app-anaerobic-fields>
     }
 }

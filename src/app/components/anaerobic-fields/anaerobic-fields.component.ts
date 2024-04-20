@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { AnaerobicData } from '../../workout.interface';
 import { DocumentData, serverTimestamp } from 'firebase/firestore';
 
 @Component({
@@ -29,8 +28,8 @@ export class AnaerobicFieldsComponent {
   @Output() anaerobicDataChange:EventEmitter<DocumentData> = new EventEmitter<DocumentData>();
 
   ngOnInit() {
-    if (!Object.hasOwn(this.anaerobicData, 'performance')) {
-      this.anaerobicData = {
+    if (!Object.hasOwn(this.anaerobicData['instanceData'], 'performance')) {
+      this.anaerobicData['instanceData'] = {
         date: serverTimestamp(),
         performance: {
           sets: 0,
@@ -42,6 +41,7 @@ export class AnaerobicFieldsComponent {
   }
 
   updateFields() {
+    this.anaerobicData['performed'] = true;
     this.anaerobicDataChange.emit(this.anaerobicData);
   }
 }
