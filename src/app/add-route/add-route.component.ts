@@ -5,7 +5,7 @@ import { DocumentData, doc, getDocs, query, serverTimestamp, setDoc, updateDoc }
 
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
-import { Workout, UserPerformance } from '../workout.interface';
+import { Workout, UserPerformance, HistoryInstance } from '../workout.interface';
 import { Util } from '../util';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -29,7 +29,7 @@ export class AddRouteComponent {
   workoutPath: string = "";
 
   workouts$: Workout[] = [];
-  historyRefs: string[] = [];
+  historyDocs: HistoryInstance[] = [];
 
   constructor() { 
     this.isExistingTemplate = history.state.isExistingTemplate;
@@ -107,8 +107,9 @@ export class AddRouteComponent {
         if (workout.userPerformance[user].performed) {
           didWorkout = true;
           await this.saveWorkoutInstance(
-            workout.userPerformance[user].instanceData, 
-            workout.workoutId, 
+            workout.userPerformance[user].instanceData,
+            workout.workoutId,
+            workout.workoutData['displayName'],
             user
           );
         }
@@ -116,9 +117,9 @@ export class AddRouteComponent {
       if (didWorkout) {
         this.updateWorkoutDate(workout.workoutId);
       }
-      console.log(counter, this.workouts$.length, this.historyRefs.length);
-      if (counter === this.workouts$.length && this.historyRefs.length > 0) {
-        console.log(counter, 'hit cap (', this.workouts$.length, '), loading in', this.historyRefs.length, 'historyRefs');
+      console.log(counter, this.workouts$.length, this.historyDocs.length);
+      if (counter === this.workouts$.length && this.historyDocs.length > 0) {
+        console.log(counter, 'hit cap (', this.workouts$.length, '), loading in', this.historyDocs.length, 'historyDocs');
         this.saveHistoryInstance();
       }
     }
@@ -126,16 +127,18 @@ export class AddRouteComponent {
 
   }
 
-  async saveWorkoutInstance(instanceData: DocumentData, workoutId: string, user: string) {
-    console.log('saving workout instance', instanceData);
+  async saveWorkoutInstance(instanceData: DocumentData, workoutId: string, workoutName: string, user: string) {
     const path = `${this.workoutPath}/${workoutId}/Users/${user}/Instances`;
     const instanceRef = doc(collection(this.db, path));
-    this.historyRefs.push(`${path}/${instanceRef.id}`);
+    this.historyDocs.push({
+      user: user,
+      instanceRef: `${path}/${instanceRef.id}`,
+      workoutName: workoutName
+    });
     await setDoc(instanceRef, instanceData);
   }
 
   async updateWorkoutDate(workoutId: string) {
-    console.log('updating workout date');
     const path = `${this.workoutPath}/${workoutId}`;
     const workoutRef = doc(this.db, path);
     await updateDoc(workoutRef, {
@@ -144,14 +147,12 @@ export class AddRouteComponent {
   }
 
   async saveHistoryInstance() {
-    console.log('saving new history instance');
     const historyRef = doc(collection(this.db, "History"));
     const historyData = {
       date: serverTimestamp(),
       displayName: this.templateName,
-      instanceRefs: this.historyRefs
+      instances: this.historyDocs
     }
-    console.log('history instance data', historyRef.id, historyData);
     await setDoc(historyRef, historyData);
   }
 }

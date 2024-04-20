@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase/firestore"
+import { DocumentData, Timestamp } from "firebase/firestore"
 
 export interface Workout {
     workoutId: string
@@ -11,4 +11,10 @@ export interface UserPerformance {
         performed: boolean,
         instanceData: DocumentData
     }
+}
+
+export interface HistoryInstance {
+    user: string,
+    instanceRef: string,
+    workoutName: string
 }

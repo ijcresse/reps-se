@@ -6,28 +6,30 @@ import {
   doc,
   getDoc
 } from '@angular/fire/firestore';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-history-details',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    MatDividerModule,
   ],
   templateUrl: './history-details.component.html',
   styleUrl: './history-details.component.scss'
 })
 export class HistoryDetailsComponent {
   // TODO: leverage the actual reference type for firestore
-  @Input() instanceRef!: string;
+  @Input() instance$!: DocumentData;
   db: Firestore = inject(Firestore);
-  instance$: DocumentData | undefined;
+  instanceHistory$: DocumentData = {};
 
   async ngOnInit() {
-    const historyDetails = await getDoc(doc(this.db, this.instanceRef));
+    const historyDetails = await getDoc(doc(this.db, this.instance$['instanceRef']));
     if (historyDetails.exists()) {
-      this.instance$ = historyDetails.data();
+      this.instanceHistory$ = historyDetails.data();
     } else {
-      console.error("WorkoutInstance could not be retrieved from Firestore!", this.instanceRef);
+      console.error("WorkoutInstance could not be retrieved from Firestore!", this.instance$['instanceRef']);
     }
   }
 }
