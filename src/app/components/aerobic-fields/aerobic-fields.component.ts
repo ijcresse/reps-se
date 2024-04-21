@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import { DocumentData, serverTimestamp } from 'firebase/firestore';
   selector: 'app-aerobic-fields',
   standalone: true,
   imports: [
+    CommonModule,
     MatDividerModule,
     FormsModule,
     MatFormFieldModule,
@@ -25,7 +27,13 @@ import { DocumentData, serverTimestamp } from 'firebase/firestore';
 })
 export class AerobicFieldsComponent {
   @Input() aerobicData!: DocumentData;
+  @Input() user!: string;
+  @Input() templateColor!: string;
+  @Input() workoutPanelColor!: string;
+  @Output() workoutPanelColorChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() aerobicDataChange:EventEmitter<DocumentData> = new EventEmitter<DocumentData>();
+
+  panelColor: string = "not-done";
 
   ngOnInit() {
     if (!Object.hasOwn(this.aerobicData['instanceData'], 'performance')) {
@@ -43,6 +51,8 @@ export class AerobicFieldsComponent {
 
   updateFields() {
     this.aerobicData['performed'] = true;
+    this.panelColor = this.templateColor;
+    this.workoutPanelColorChange.emit(this.templateColor);
     this.aerobicDataChange.emit(this.aerobicData);
   }
 

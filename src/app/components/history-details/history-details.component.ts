@@ -7,6 +7,7 @@ import {
   getDoc
 } from '@angular/fire/firestore';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-history-details',
@@ -14,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     MatDividerModule,
+    MatCardModule,
   ],
   templateUrl: './history-details.component.html',
   styleUrl: './history-details.component.scss'

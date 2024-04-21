@@ -1,16 +1,29 @@
-<mat-expansion-panel>
+<mat-expansion-panel [ngClass]="panelColor">
     <mat-expansion-panel-header>
-        <mat-panel-title>
-            {{ workout.workoutData['displayName'] }}
+        <mat-panel-title [ngClass]="panelColor">
+            <h3 class="subtitle-1">{{ workout.workoutData['displayName'] }}</h3>
         </mat-panel-title>
-        <!-- TODO: fix a bug where the server hasn't set the timestamp object properly yet -->
+        <!-- TODO: fix a bug where the server hasn't set the timestamp object properly yet on a newly added workout -->
         <!-- <mat-panel-description>
             {{ workout.workoutData['date'].toMillis() | date: 'dd/MM/yyyy' }}
         </mat-panel-description> -->
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
-        <!-- TODO: have users be fetched from db instead of hardcoded -->
-        <app-workout-instance [userPath]="userPath" [workout]="workout" user="Ian"></app-workout-instance>
-        <app-workout-instance [userPath]="userPath" [workout]="workout" user="Holly"></app-workout-instance>
+        <!-- TODO: hardcoded users is fine for us, but this is a good place to expand -->
+        <!-- ex: UserGroup collection of registered users -->
+        <app-workout-instance 
+            [userPath]="userPath" 
+            [workout]="workout" 
+            [templateColor]="templateColor"
+            [(panelColor)]="panelColor"
+            user="Ian">
+        </app-workout-instance>
+        <app-workout-instance 
+            [userPath]="userPath" 
+            [workout]="workout" 
+            [templateColor]="templateColor" 
+            [(panelColor)]="panelColor"
+            user="Holly">
+        </app-workout-instance>
     </ng-template>
 </mat-expansion-panel>

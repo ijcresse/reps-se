@@ -4,8 +4,20 @@
     Error! Sorry, something went wrong.
 } @else {
     @if ( workout.workoutData['type'] === 0) {
-        <app-aerobic-fields ng-repeat="(user) in workout.userPerformance" [(aerobicData)]="workout.userPerformance[user]"></app-aerobic-fields>
+        <app-aerobic-fields ng-repeat="(user) in workout.userPerformance" 
+            [(aerobicData)]="workout.userPerformance[user]" 
+            [templateColor]="templateColor"
+            [workoutPanelColor]="panelColor"
+            (workoutPanelColorChange)="onPanelColorChange($event)"
+            [user]="user">
+        </app-aerobic-fields>
     } @else {
-        <app-anaerobic-fields ng-repeat="(user) in workout.userPerformance" [(anaerobicData)]="workout.userPerformance[user]"></app-anaerobic-fields>
+        <app-anaerobic-fields ng-repeat="(user) in workout.userPerformance" 
+            [(anaerobicData)]="workout.userPerformance[user]" 
+            [templateColor]="templateColor"
+            [workoutPanelColor]="panelColor"
+            (workoutPanelColorChange)="onPanelColorChange($event)"
+            [user]="user">
+        </app-anaerobic-fields>
     }
 }

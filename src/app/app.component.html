@@ -1,9 +1,10 @@
-<main>
+<main class="root">
   <section class="header">
     <a [routerLink]="['/']">
-      <h1 class="header-title">{{ title }}</h1>
+      <h1 class="headline-5"><i>{{ title }}</i></h1>
     </a>
   </section>
+  <mat-divider></mat-divider>
   <section class="content">
     <router-outlet />
   </section>

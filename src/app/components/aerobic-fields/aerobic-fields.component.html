@@ -1,46 +1,53 @@
-<div>
-    <h4 class="mat-subheading-1">Hours</h4>
-    <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].hours = aerobicData['instanceData']['performance'].hours - 1">
-        <mat-icon>remove</mat-icon>
-    </button>
-    <mat-form-field>
-        <input matInput type="number" [(ngModel)]="aerobicData['instanceData']['performance'].hours" />
-    </mat-form-field>
-    <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].hours = aerobicData['instanceData']['performance'].hours + 1">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
-<div>
-    <h4 class="mat-subheading-1">Minutes</h4>
-    <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].minutes = aerobicData['instanceData']['performance'].minutes - 1">
-        <mat-icon>remove</mat-icon>
-    </button>
-    <mat-form-field>
-        <input matInput type="number" [(ngModel)]="aerobicData['instanceData']['performance'].minutes" />
-    </mat-form-field>
-    <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].minutes = aerobicData['instanceData']['performance'].minutes + 1">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
-<div>
-    <h4 class="mat-subheading-1">Miles</h4>
-    <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].miles = aerobicData['instanceData']['performance'].miles - 1">
-        <mat-icon>remove</mat-icon>
-    </button>
-    <mat-form-field>
-        <input matInput type="number" [(ngModel)]="aerobicData['instanceData']['performance'].miles" />
-    </mat-form-field>
-    <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].miles = aerobicData['instanceData']['performance'].miles + 1">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
-<div>
-    <h4 class="mat-subheading-1">Notes</h4>
-    <mat-form-field>
-        <mat-label>Additional Context</mat-label>
-        <textarea matInput [(ngModel)]="aerobicData['instanceData']['performance'].notes"></textarea>
-    </mat-form-field>
-</div>
-<div>
-    <button mat-button color="primary" (click)="updateFields()">Update Workout</button>
+<div [ngClass]="panelColor" class="container">
+    <div class="form-header">
+        <p class="body-1">{{ user }}</p>
+        <button mat-stroked-button color="primary" (click)="updateFields()">Done!</button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="form-container">
+        <div class="stats-container">
+            <div class="field">
+                <p class="body-1">Hours</p>
+                <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].hours = aerobicData['instanceData']['performance'].hours - 1">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <mat-form-field>
+                    <input matInput type="number" [(ngModel)]="aerobicData['instanceData']['performance'].hours" />
+                </mat-form-field>
+                <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].hours = aerobicData['instanceData']['performance'].hours + 1">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+            <div class="field">
+                <p class="body-1">Minutes</p>
+                <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].minutes = aerobicData['instanceData']['performance'].minutes - 1">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <mat-form-field>
+                    <input matInput type="number" [(ngModel)]="aerobicData['instanceData']['performance'].minutes" />
+                </mat-form-field>
+                <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].minutes = aerobicData['instanceData']['performance'].minutes + 1">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+            <div class="field">
+                <p class="body-1">Miles</p>
+                <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].miles = aerobicData['instanceData']['performance'].miles - 1">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <mat-form-field>
+                    <input matInput type="number" [(ngModel)]="aerobicData['instanceData']['performance'].miles" />
+                </mat-form-field>
+                <button mat-stroked-button (click)="aerobicData['instanceData']['performance'].miles = aerobicData['instanceData']['performance'].miles + 1">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="field">
+            <mat-form-field class="notes">
+                <mat-label>Notes</mat-label>
+                <textarea matInput [(ngModel)]="aerobicData['instanceData']['performance'].notes"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
 </div>
