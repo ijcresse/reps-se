@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { AddRouteComponent } from './add-route/add-route.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { AddRouteComponent } from './add-route/add-route.component';
     RouterModule,
     CommonModule,
     HomeComponent,
-    AddRouteComponent
+    AddRouteComponent,
+    MatDividerModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

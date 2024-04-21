@@ -2,7 +2,10 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
+import { DocumentData } from 'firebase/firestore';
+
 import { HistoryDetailsComponent } from '../history-details/history-details.component';
+import { Util } from '../../util';
 
 @Component({
   selector: 'app-history-panel',
@@ -16,5 +19,10 @@ import { HistoryDetailsComponent } from '../history-details/history-details.comp
   styleUrl: './history-panel.component.scss'
 })
 export class HistoryPanelComponent {
-  @Input() historyDoc!: any;
+  @Input() historyDoc!: DocumentData;
+  panelColor: string = "";
+
+  ngOnInit() {
+    this.panelColor = Util.pascalCase(this.historyDoc['displayName']);
+  }
 }

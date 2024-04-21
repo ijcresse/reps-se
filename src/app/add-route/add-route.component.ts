@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { DocumentData, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
-import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
-import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
-import { Workout, UserPerformance, HistoryInstance } from '../workout.interface';
-import { Util } from '../util';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
+import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
+import { Workout, HistoryInstance } from '../workout.interface';
+import { Util } from '../util';
 
 @Component({
   selector: 'app-add-route',
@@ -15,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     MatButtonModule,
+    MatDividerModule,
     AddWorkoutPanelComponent,
     WorkoutPanelComponent
   ],
@@ -24,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class AddRouteComponent {
   db: Firestore = inject(Firestore);
   isExistingTemplate!: boolean;
+  templateId;
   templateDoc;
   templateName;
   workoutPath: string = "";
@@ -31,13 +36,15 @@ export class AddRouteComponent {
   workouts$: Workout[] = [];
   historyDocs: HistoryInstance[] = [];
 
-  constructor() { 
+  constructor(private _snackBar: MatSnackBar) { 
     this.isExistingTemplate = history.state.isExistingTemplate;
     if (this.isExistingTemplate) {
       this.templateDoc = history.state.templateDoc;
       this.templateName = this.templateDoc.displayName;
+      this.templateId = Util.pascalCase(this.templateName)
     } else {
       this.templateName = history.state.templateName;
+      this.templateId = Util.pascalCase(this.templateName)
     }
     //throw error and redirect to error page if templateId isn't there.
   }
@@ -53,8 +60,7 @@ export class AddRouteComponent {
 
   //performed here because user has committed to a new page
   async createNewTemplate() {
-    const templateId: string = Util.pascalCase(this.templateName);
-    const templateDocRef = doc(this.db, "WorkoutTemplates", templateId);
+    const templateDocRef = doc(this.db, "WorkoutTemplates", this.templateId);
     const templateDoc = {
       displayName: this.templateName,
       color: "tbd",
@@ -63,8 +69,8 @@ export class AddRouteComponent {
     await setDoc(templateDocRef, templateDoc)
       .then(() => {
         this.templateDoc = templateDoc
-        this.templateDoc.id = templateId;
-        this.workoutPath = `WorkoutTemplates/${templateId}/Workouts`;
+        this.templateDoc.id = this.templateId;
+        this.workoutPath = `WorkoutTemplates/${this.templateId}/Workouts`;
       });
     console.log(this.workoutPath);
   }
@@ -90,14 +96,13 @@ export class AddRouteComponent {
         }
       })
     })
-    console.log(this.workoutPath);
   }
 
   addWorkout(workout: Workout) {
     this.workouts$.push(workout);
-    console.log('added new workout', this.workouts$);
   }
 
+  //TODO: a little ugly. restructure this
   async finishWorkout() {
     let counter = 0;
     this.workouts$.forEach((workout) => {
@@ -117,14 +122,12 @@ export class AddRouteComponent {
       if (didWorkout) {
         this.updateWorkoutDate(workout.workoutId);
       }
-      console.log(counter, this.workouts$.length, this.historyDocs.length);
       if (counter === this.workouts$.length && this.historyDocs.length > 0) {
-        console.log(counter, 'hit cap (', this.workouts$.length, '), loading in', this.historyDocs.length, 'historyDocs');
         this.saveHistoryInstance();
       }
-    }
-  );
+    });
 
+    this.openSnackBar(`${this.templateName} complete!`, 'OK');
   }
 
   async saveWorkoutInstance(instanceData: DocumentData, workoutId: string, workoutName: string, user: string) {
@@ -154,5 +157,9 @@ export class AddRouteComponent {
       instances: this.historyDocs
     }
     await setDoc(historyRef, historyData);
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 }

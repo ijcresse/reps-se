@@ -10,7 +10,7 @@ import {
   query
 } from 'firebase/firestore';
 
-import { Workout, UserPerformance } from '../../workout.interface';
+import { Workout } from '../../workout.interface';
 import { AerobicFieldsComponent } from '../aerobic-fields/aerobic-fields.component';
 import { AnaerobicFieldsComponent } from '../anaerobic-fields/anaerobic-fields.component';
 
@@ -29,13 +29,13 @@ export class WorkoutInstanceComponent {
   @Input() userPath!: string;
   @Input() workout!: Workout;
   @Input() user!: string;
-  // @Output() addInstanceData = new EventEmitter<Workout>();
+  @Input() panelColor!: string;
+  @Input() templateColor!: string;
+  @Output() panelColorChange: EventEmitter<string> = new EventEmitter<string>();
 
   db: Firestore = inject(Firestore);
   //TODO: figure out enum in angular template
   //error, loading, loaded, empty respectively
-
-  // instanceData: DocumentData = {};
   
   instanceId: string = "";
   currentState: string = "loading";
@@ -57,11 +57,14 @@ export class WorkoutInstanceComponent {
         if (doc.exists()) {
           this.instanceId = doc.id;
           this.workout.userPerformance[this.user].instanceData = doc.data();
-          // this.applyInstanceToUser(this.workout, this.instanceData, this.user);
-          // this.addInstanceData.emit(this.workout); //guess i don't need this?
         }
       })
     }
     this.currentState = 'loaded';
+  }
+
+  //bubble up to workout-panel
+  onPanelColorChange(color: string) {
+    this.panelColorChange.emit(color);
   }
 }

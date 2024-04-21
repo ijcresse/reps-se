@@ -1,6 +1,6 @@
 <section class="header">
-    <h1 class="mat-title">{{ templateName }}</h1>
-    <button mat-button color="primary" (click)="finishWorkout()">Complete {{ templateName }} Workout</button>
+    <h1 class="headline-6">{{ templateName }}</h1>
+    <button mat-stroked-button color="primary" (click)="finishWorkout()">Complete {{ templateName }} Workout</button>
 </section>
 <section class="content">
     @if (!templateDoc) {
@@ -8,7 +8,9 @@
     } @else {
         <app-add-workout-panel [templateId]="templateDoc.id" (addWorkoutEvent)="addWorkout($event)"></app-add-workout-panel>
     }
+    <mat-divider></mat-divider>
+    <h3 class="headline-2">History:</h3>
     @for (workout of workouts$; track workout; let idx = $index) {
-        <app-workout-panel [workout]="workout" [workoutPath]="workoutPath" [index]="idx"></app-workout-panel>
+        <app-workout-panel [workout]="workout" [workoutPath]="workoutPath" [templateColor]="templateId" [index]="idx"></app-workout-panel>
     }
 </section>

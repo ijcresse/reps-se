@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import { DocumentData, serverTimestamp } from 'firebase/firestore';
   selector: 'app-anaerobic-fields',
   standalone: true,
   imports: [
+    CommonModule,
     MatDividerModule,
     FormsModule,
     MatFormFieldModule,
@@ -25,7 +27,13 @@ import { DocumentData, serverTimestamp } from 'firebase/firestore';
 })
 export class AnaerobicFieldsComponent {
   @Input() anaerobicData!: DocumentData;
+  @Input() user!: string;
+  @Input() templateColor!: string;
+  @Input() workoutPanelColor!: string;
+  @Output() workoutPanelColorChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() anaerobicDataChange:EventEmitter<DocumentData> = new EventEmitter<DocumentData>();
+
+  panelColor: string = "not-done";
 
   ngOnInit() {
     if (!Object.hasOwn(this.anaerobicData['instanceData'], 'performance')) {
@@ -34,7 +42,8 @@ export class AnaerobicFieldsComponent {
         performance: {
           sets: 0,
           reps: 0,
-          weight: 0
+          weight: 0,
+          notes: ""
         }
       }
     }
@@ -42,6 +51,8 @@ export class AnaerobicFieldsComponent {
 
   updateFields() {
     this.anaerobicData['performed'] = true;
+    this.panelColor = this.templateColor;
+    this.workoutPanelColorChange.emit(this.templateColor);
     this.anaerobicDataChange.emit(this.anaerobicData);
   }
 }

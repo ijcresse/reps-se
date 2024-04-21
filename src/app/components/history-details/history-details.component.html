@@ -1,9 +1,17 @@
 @if ( !instance$ ) {
     Loading data...
 } @else {
-    <h3 class="mat-subheading-2">{{ instance$['workoutName'] }}: {{ instance$['user'] }}</h3>
-    <mat-divider></mat-divider>
-    <div *ngFor="let history of instanceHistory$['performance'] | keyvalue">
-        <h4 class="mat-subheading-1">{{ history.key }}: {{ history.value }}</h4>
-    </div>
+    <mat-card class="container">
+        <mat-card-header class="header">
+            <p class="body-1">{{ instance$['workoutName'] }}: {{ instance$['user'] }}</p>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <!-- <mat-card class="content"> -->
+            <mat-card-content>
+                <div class="field" *ngFor="let history of instanceHistory$['performance'] | keyvalue">
+                        <p class="body-1">{{ history.key }}: {{ history.value }}</p>
+                </div>
+            </mat-card-content>
+        <!-- </mat-card> -->
+    </mat-card>
 }

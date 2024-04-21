@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DocumentData } from 'firebase/firestore';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -21,27 +20,15 @@ import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.c
 })
 export class WorkoutPanelComponent {
   @Input() workout!: Workout;
-  @Input() workoutPath!: string;  
+  @Input() workoutPath!: string;
+  @Input() templateColor!: string;
   @Input() index!: number;
 
+  //initially empty - workouts don't get color until they're performed.
+  panelColor: string = "";
   userPath: string = "";
 
   ngOnInit() {
     this.userPath = `${this.workoutPath}/${this.workout.workoutId}/Users`;
   }
 }
-
-/*
-adding workout: WorkoutTemplates/ChestDay/Workouts/Incline Press 
-Object { id: "Incline Press", date: {…}, displayName: "Incline Press", type: 1 }
-​
-date: Object { _methodName: "serverTimestamp" }
-​
-displayName: "Incline Press"
-​
-id: "Incline Press"
-​
-type: 1
-​
-<prototype>: Object { … }
-*/
