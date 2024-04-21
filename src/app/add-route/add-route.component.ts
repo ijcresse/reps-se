@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { DocumentData, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
-import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
-import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
-import { Workout, HistoryInstance } from '../workout.interface';
-import { Util } from '../util';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
+import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
+import { Workout, HistoryInstance } from '../workout.interface';
+import { Util } from '../util';
 
 @Component({
   selector: 'app-add-route',
@@ -34,7 +36,7 @@ export class AddRouteComponent {
   workouts$: Workout[] = [];
   historyDocs: HistoryInstance[] = [];
 
-  constructor() { 
+  constructor(private _snackBar: MatSnackBar) { 
     this.isExistingTemplate = history.state.isExistingTemplate;
     if (this.isExistingTemplate) {
       this.templateDoc = history.state.templateDoc;
@@ -100,6 +102,7 @@ export class AddRouteComponent {
     this.workouts$.push(workout);
   }
 
+  //TODO: a little ugly. restructure this
   async finishWorkout() {
     let counter = 0;
     this.workouts$.forEach((workout) => {
@@ -122,9 +125,9 @@ export class AddRouteComponent {
       if (counter === this.workouts$.length && this.historyDocs.length > 0) {
         this.saveHistoryInstance();
       }
-    }
-  );
+    });
 
+    this.openSnackBar(`${this.templateName} complete!`, 'OK');
   }
 
   async saveWorkoutInstance(instanceData: DocumentData, workoutId: string, workoutName: string, user: string) {
@@ -154,5 +157,9 @@ export class AddRouteComponent {
       instances: this.historyDocs
     }
     await setDoc(historyRef, historyData);
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 }
