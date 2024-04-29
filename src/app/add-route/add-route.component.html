@@ -3,7 +3,7 @@
     <button mat-stroked-button color="primary" (click)="finishWorkout()">Complete {{ templateName }} Workout</button>
 </section>
 <section class="content">
-    @if (!templateDoc) {
+    @if (!loaded) {
         Setting up your workout...
     } @else {
         <app-add-workout-panel [templateId]="templateId" (addWorkoutEvent)="addWorkout($event)"></app-add-workout-panel>

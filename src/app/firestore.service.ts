@@ -17,6 +17,8 @@ import {
 } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
+import { Workout } from './workout.interface';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,19 +50,19 @@ export class FirestoreService {
     return collectionData(q, { idField: 'id' });
   }
 
-  async createWorkoutTemplate(templateId: string, templateName: string): Promise<void> {
+  async createWorkoutTemplate(templateId: string, templateName: string) {
     const ref = doc(this.db, "WorkoutTemplates", templateId);
     const templateDoc = {
       displayName: templateName,
       latestWorkout: serverTimestamp()
     }
-    return await setDoc(ref, templateDoc);
+    await setDoc(ref, templateDoc);
   }
 
-  async loadWorkoutTemplate(workoutPath: string): Promise<DocumentData[]> {
+  async loadWorkoutTemplate(workoutPath: string): Promise<Workout[]> {
     const q = query(collection(this.db, workoutPath));
     const snapshot = await getDocs(q);
-    let workoutDocs: DocumentData[] = [];
+    let workoutDocs: Workout[] = [];
     const blankUserPerformance = {
       performed: false,
       instanceData: {}

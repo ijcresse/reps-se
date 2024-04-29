@@ -30,9 +30,8 @@ export class AddRouteComponent {
   dbService: FirestoreService = inject(FirestoreService);
 
   isExistingTemplate!: boolean;
+  loaded: boolean;
   templateId;
-  //TODO: templateDoc is unnecessary. pare down
-  templateDoc;
   templateName;
   workoutPath: string = "";
 
@@ -41,67 +40,24 @@ export class AddRouteComponent {
 
   constructor(private _snackBar: MatSnackBar) { 
     this.isExistingTemplate = history.state.isExistingTemplate;
-    if (this.isExistingTemplate) {
-      this.templateDoc = history.state.templateDoc;
-      this.templateName = this.templateDoc.displayName;
-      this.templateId = Util.pascalCase(this.templateName)
-    } else {
-      this.templateName = history.state.templateName;
-      this.templateId = Util.pascalCase(this.templateName)
-    }
-    //throw error and redirect to error page if templateId isn't there.
+    this.loaded = false;
+    this.templateName = history.state.templateName;
+    this.templateId = Util.pascalCase(this.templateName)
+    this.workoutPath = `WorkoutTemplates/${this.templateId}/Workouts`;
+    //TODO: throw error and redirect to error page if templateId isn't there.
   }
 
   //TODO: re-engineer this. even with isExistingTemplate, this feels a little hacky
   async ngOnInit() {
     if (!this.isExistingTemplate) {
-      this.createNewTemplate();
+      await this.dbService.createWorkoutTemplate(this.templateId, this.templateName);
     } else {
-      this.loadExistingTemplate();
-    }
-  }
-
-  //performed here because user has committed to a new page
-  async createNewTemplate() {
-    const templateDocRef = doc(this.db, "WorkoutTemplates", this.templateId);
-    const templateDoc = {
-      displayName: this.templateName,
-      color: "tbd",
-      latestWorkout: serverTimestamp()
-    }
-    await setDoc(templateDocRef, templateDoc)
-    .then(() => {
-      this.templateDoc = templateDoc
-      this.templateDoc.id = this.templateId;
-      this.workoutPath = `WorkoutTemplates/${this.templateId}/Workouts`;
-    });
-    // await this.dbService.createWorkoutTemplate(this.templateId, this.templateName)
-    // .then(() => {
-      
-    // });
-  }
-
-  async loadExistingTemplate() {
-    this.workoutPath = `WorkoutTemplates/${this.templateDoc.id}/Workouts`;
-    const workoutCollection = collection(this.db, this.workoutPath);
-    const workoutQuery = query(workoutCollection);
-    const workoutSnapshot = await getDocs(workoutQuery);
-    workoutSnapshot.forEach((doc) => {
-      this.workouts$.push({
-        workoutId: doc.id,
-        workoutData: doc.data(),
-        userPerformance: {
-          'Ian': {
-            performed: false,
-            instanceData: {}
-          },
-          'Holly': {
-            performed: false,
-            instanceData: {}
-          }
-        }
+      // this.loadExistingTemplate();
+      await this.dbService.loadWorkoutTemplate(this.workoutPath)
+      .then((docs) => {
+        this.workouts$ = docs;
       })
-    })
+    }
   }
 
   addWorkout(workout: Workout) {
