@@ -63,20 +63,22 @@ export class FirestoreService {
     const q = query(collection(this.db, workoutPath));
     const snapshot = await getDocs(q);
     let workoutDocs: Workout[] = [];
-    const blankUserPerformance = {
-      performed: false,
-      instanceData: {}
-    }
     snapshot.forEach((doc) => {
       workoutDocs.push({
         workoutId: doc.id,
         workoutData: doc.data(),
         userPerformance: {
-          'Ian': blankUserPerformance,
-          'Holly': blankUserPerformance
+          'Ian': {
+            performed: false,
+            instanceData: {}
+          },
+          'Holly': {
+            performed: false,
+            instanceData: {}
+          }
         }
       })
-    })
+    });
     return workoutDocs;
   }
 
