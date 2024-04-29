@@ -28,9 +28,9 @@
                 <ng-template matTabContent>
                     <mat-form-field class="form-field">
                         <mat-label>Template Name</mat-label>
-                        <input required matInput [(ngModel)]="templateName" />
-                        @if (templateName) {
-                            <button matSuffix mat-icon-button aria-label="clear" (click)="templateName=''">
+                        <input required matInput [(ngModel)]="createTemplateName" />
+                        @if (createTemplateName) {
+                            <button matSuffix mat-icon-button aria-label="clear" (click)="createTemplateName=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         }

@@ -42,7 +42,7 @@ export class AddRouteComponent {
     this.isExistingTemplate = history.state.isExistingTemplate;
     this.loaded = false;
     this.templateName = history.state.templateName;
-    this.templateId = Util.pascalCase(this.templateName)
+    this.templateId = history.state.templateId;
     this.workoutPath = `WorkoutTemplates/${this.templateId}/Workouts`;
     //TODO: throw error and redirect to error page if templateId isn't there.
   }
@@ -50,12 +50,16 @@ export class AddRouteComponent {
   //TODO: re-engineer this. even with isExistingTemplate, this feels a little hacky
   async ngOnInit() {
     if (!this.isExistingTemplate) {
-      await this.dbService.createWorkoutTemplate(this.templateId, this.templateName);
+      await this.dbService.createWorkoutTemplate(this.templateId, this.templateName)
+      .then(() => {
+        this.loaded = true;
+      });
     } else {
       // this.loadExistingTemplate();
       await this.dbService.loadWorkoutTemplate(this.workoutPath)
       .then((docs) => {
         this.workouts$ = docs;
+        this.loaded = true;
       })
     }
   }

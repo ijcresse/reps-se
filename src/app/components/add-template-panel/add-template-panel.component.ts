@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, FormControl } from '@angular/forms';
+import { Util } from '../../util';
 
 @Component({
   selector: 'app-add-template-panel',
@@ -40,7 +41,7 @@ export class AddTemplatePanelComponent {
   loaded: boolean = false;
 
   selectedTemplate: any;
-  templateName: string = ''
+  createTemplateName: string = ''
 
   constructor(private router: Router) { }
   
@@ -53,24 +54,21 @@ export class AddTemplatePanelComponent {
     this.loaded = true;
   }
 
+  //perhaps i should have load template vs create template?
   createTemplate() {
     const isExistingTemplate = this.activeTab.value === 0;
-    // const templateName = isExistingTemplate ? this.templateName : this.selectedTemplateId;
-    //if templateLinkId is null, throw an error. shouldn't happen with proper validation in forms though
-    this.router.navigateByUrl(`/add`, { 
-      state: {
-        isExistingTemplate: isExistingTemplate,
-        templateDoc: this.selectedTemplate,
-        templateName: this.templateName
-      }
-    });
-    /*
-    if activeTab is on new template then we pass new template name to AddWorkoutComponent
-    else we pass in the collection
-    ok basically we hit /add/:templateName
-
-    leave it to addworkoutcomponent to figure out if it's new or not. 
-    then it can insert the doc into templates collection appropriately.
-    */
+    const templateState = { 
+      isExistingTemplate: isExistingTemplate,
+      templateId: "",
+      templateName: ""
+    };
+    if (isExistingTemplate) {
+      templateState.templateId = this.selectedTemplate.id,
+      templateState.templateName = this.selectedTemplate.displayName
+    } else {
+      templateState.templateId = Util.pascalCase(this.createTemplateName);
+      templateState.templateName = this.createTemplateName;
+    }
+    this.router.navigateByUrl(`/add`, { state: templateState });
   }
 }
