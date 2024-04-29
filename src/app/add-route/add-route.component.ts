@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Firestore, collection } from '@angular/fire/firestore';
-import { DocumentData, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentData, DocumentReference, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
+import { FirestoreService } from '../firestore.service';
 import { Workout, HistoryInstance } from '../workout.interface';
 import { Util } from '../util';
 
@@ -26,9 +27,11 @@ import { Util } from '../util';
   styleUrl: './add-route.component.scss'
 })
 export class AddRouteComponent {
-  db: Firestore = inject(Firestore);
+  dbService: FirestoreService = inject(FirestoreService);
+
   isExistingTemplate!: boolean;
   templateId;
+  //TODO: templateDoc is unnecessary. pare down
   templateDoc;
   templateName;
   workoutPath: string = "";
@@ -67,12 +70,15 @@ export class AddRouteComponent {
       latestWorkout: serverTimestamp()
     }
     await setDoc(templateDocRef, templateDoc)
-      .then(() => {
-        this.templateDoc = templateDoc
-        this.templateDoc.id = this.templateId;
-        this.workoutPath = `WorkoutTemplates/${this.templateId}/Workouts`;
-      });
-    console.log(this.workoutPath);
+    .then(() => {
+      this.templateDoc = templateDoc
+      this.templateDoc.id = this.templateId;
+      this.workoutPath = `WorkoutTemplates/${this.templateId}/Workouts`;
+    });
+    // await this.dbService.createWorkoutTemplate(this.templateId, this.templateName)
+    // .then(() => {
+      
+    // });
   }
 
   async loadExistingTemplate() {
@@ -102,61 +108,51 @@ export class AddRouteComponent {
     this.workouts$.push(workout);
   }
 
-  //TODO: a little ugly. restructure this
   async finishWorkout() {
-    let counter = 0;
+    const workoutInstances: Map<DocumentReference, DocumentData> = new Map();
+    const workouts: DocumentReference[] = [];
+    const historyDocs: DocumentData[] = [];
+    this.createDocs(workoutInstances, workouts, historyDocs);
+
+    if (workouts.length > 0 && historyDocs.length > 0) {
+      await this.dbService.saveFinishedWorkout(workoutInstances, workouts, historyDocs, this.templateName)
+      .then(() => {
+        this.openSnackBar(`${this.templateName} complete!`, "OK");
+      });
+    } else {
+      this.openSnackBar("No completed workouts detected!", "OK");
+    }
+  }
+
+  //assembles information from each workout and creates historyDocs at the same time
+  createDocs(
+      workoutInstances: Map<DocumentReference, DocumentData>, 
+      workouts:  DocumentReference[],
+      historyDocs: DocumentData[]
+  ) {
     this.workouts$.forEach((workout) => {
       let didWorkout = false;
-      counter++;
-      Object.keys(workout.userPerformance).forEach(async (user) => {
+      Object.keys(workout.userPerformance).forEach((user) => {
         if (workout.userPerformance[user].performed) {
           didWorkout = true;
-          await this.saveWorkoutInstance(
-            workout.userPerformance[user].instanceData,
-            workout.workoutId,
-            workout.workoutData['displayName'],
-            user
-          );
+
+          const instancePath = `${this.workoutPath}/${workout.workoutId}/Users/${user}/Instances`
+          const instanceRef = this.dbService.makeRefFromPath(instancePath);
+          workoutInstances.set(instanceRef, workout.userPerformance[user].instanceData);
+
+          historyDocs.push({
+            user: user,
+            instanceRef:`${instancePath}/${instanceRef.id}`,
+            workoutName: workout.workoutData['displayName']
+          })
         }
       })
+
       if (didWorkout) {
-        this.updateWorkoutDate(workout.workoutId);
+        const workoutRef = this.dbService.makeRefFromPath(`${this.workoutPath}/${workout.workoutId}`);
+        workouts.push(workoutRef);
       }
-      if (counter === this.workouts$.length && this.historyDocs.length > 0) {
-        this.saveHistoryInstance();
-      }
-    });
-
-    this.openSnackBar(`${this.templateName} complete!`, 'OK');
-  }
-
-  async saveWorkoutInstance(instanceData: DocumentData, workoutId: string, workoutName: string, user: string) {
-    const path = `${this.workoutPath}/${workoutId}/Users/${user}/Instances`;
-    const instanceRef = doc(collection(this.db, path));
-    this.historyDocs.push({
-      user: user,
-      instanceRef: `${path}/${instanceRef.id}`,
-      workoutName: workoutName
-    });
-    await setDoc(instanceRef, instanceData);
-  }
-
-  async updateWorkoutDate(workoutId: string) {
-    const path = `${this.workoutPath}/${workoutId}`;
-    const workoutRef = doc(this.db, path);
-    await updateDoc(workoutRef, {
-      latestWorkout: serverTimestamp()
     })
-  }
-
-  async saveHistoryInstance() {
-    const historyRef = doc(collection(this.db, "History"));
-    const historyData = {
-      date: serverTimestamp(),
-      displayName: this.templateName,
-      instances: this.historyDocs
-    }
-    await setDoc(historyRef, historyData);
   }
 
   openSnackBar(message: string, action: string) {
