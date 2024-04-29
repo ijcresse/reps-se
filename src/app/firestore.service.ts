@@ -82,8 +82,12 @@ export class FirestoreService {
     return workoutDocs;
   }
 
-  makeRefFromPath(path: string) {
+  makeCollectionRefFromPath(path: string) {
     return doc(collection(this.db, path));
+  }
+
+  makeDocRefFromPath(path: string) {
+    return doc(this.db, path);
   }
 
   async saveFinishedWorkout(
@@ -102,7 +106,7 @@ export class FirestoreService {
       batch.set(ref, doc);
     }
 
-    const historyRef = this.makeRefFromPath("History");
+    const historyRef = this.makeCollectionRefFromPath("History");
     const historyDoc = {
       date: serverTimestamp(),
       displayName: templateName,
