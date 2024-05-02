@@ -3,10 +3,10 @@
     <button mat-stroked-button color="primary" (click)="finishWorkout()">Complete {{ templateName }} Workout</button>
 </section>
 <section class="content">
-    @if (!templateDoc) {
+    @if (!loaded) {
         Setting up your workout...
     } @else {
-        <app-add-workout-panel [templateId]="templateDoc.id" (addWorkoutEvent)="addWorkout($event)"></app-add-workout-panel>
+        <app-add-workout-panel [templateId]="templateId" (addWorkoutEvent)="addWorkout($event)"></app-add-workout-panel>
     }
     <mat-divider></mat-divider>
     <h3 class="headline-2">History:</h3>

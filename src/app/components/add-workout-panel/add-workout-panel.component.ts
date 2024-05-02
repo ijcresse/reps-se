@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Util } from '../../util';
 import { Workout } from '../../workout.interface';
 import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.component';
+import { FirestoreService } from '../../firestore.service';
 
 @Component({
   selector: 'app-add-workout-panel',
@@ -39,7 +40,7 @@ import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.c
 export class AddWorkoutPanelComponent {
   @Input() templateId!: string;
   @Output() addWorkoutEvent = new EventEmitter<Workout>();
-  db: Firestore = inject(Firestore);
+  db: FirestoreService = inject(FirestoreService);
 
   workoutName: string = "";
   workoutType = [ 
@@ -51,8 +52,8 @@ export class AddWorkoutPanelComponent {
   async addWorkout() {
     const workoutId = Util.pascalCase(this.workoutName);
     const path = `WorkoutTemplates/${this.templateId}/Workouts/${workoutId}`;
-    const workoutDocRef: DocumentReference = doc(this.db, path);
-    const workoutDoc: DocumentData = {
+    const ref = this.db.getRefFromDocPath(path);
+    const doc: DocumentData = {
       id: workoutId,
       date: serverTimestamp(),
       displayName: this.workoutName,
@@ -60,7 +61,7 @@ export class AddWorkoutPanelComponent {
     };
     const newWorkout: Workout = {
       workoutId: workoutId,
-      workoutData: workoutDoc,
+      workoutData: doc,
       userPerformance: {
         'Ian': {
           performed: false,
@@ -72,19 +73,22 @@ export class AddWorkoutPanelComponent {
         }
       }
     }
-    await setDoc(workoutDocRef, workoutDoc)
-      .then(() => {
-        this.addWorkoutEvent.emit(newWorkout)
-        //set up Users for the new workout
-        this.addUsersToWorkout(path);
-      });
+    this.db.setDoc(ref, doc)
+    .then(() => {
+      this.addWorkoutEvent.emit(newWorkout)
+      this.addUsersToWorkout(path);
+    });
   }
 
   async addUsersToWorkout(workoutPath: string) {
     const userDoc: DocumentData = {
       latestDate: serverTimestamp()
     };
-    await setDoc(doc(this.db, `${workoutPath}/Users/Ian`), userDoc);
-    await setDoc(doc(this.db, `${workoutPath}/Users/Holly`), userDoc);
+    //TODO: fetch this from db
+    const users = ['Ian', 'Holly'];
+    for (let i = 0; i < users.length; i++) {
+      const ref = this.db.getRefFromDocPath(`${workoutPath}/Users/${users[i]}`);
+      await this.db.setDoc(ref, userDoc);
+    }
   }
 }

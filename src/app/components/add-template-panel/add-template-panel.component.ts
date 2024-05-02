@@ -2,8 +2,6 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Firestore, collection, collectionData } from '@angular/fire/firestore'
-import { query } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
 
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -14,6 +12,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, FormControl } from '@angular/forms';
+import { Util } from '../../util';
+import { FirestoreService } from '../../firestore.service';
 
 @Component({
   selector: 'app-add-template-panel',
@@ -34,13 +34,13 @@ import { FormsModule, FormControl } from '@angular/forms';
   styleUrl: './add-template-panel.component.scss'
 })
 export class AddTemplatePanelComponent {
-  db: Firestore = inject(Firestore);
+  db: FirestoreService = inject(FirestoreService);
   templates$: Observable<any[]> = of();
   activeTab = new FormControl(0);
   loaded: boolean = false;
 
   selectedTemplate: any;
-  templateName: string = ''
+  createTemplateName: string = ''
 
   constructor(private router: Router) { }
   
@@ -48,29 +48,28 @@ export class AddTemplatePanelComponent {
     if (this.loaded) {
       return;
     }
-    const templatesQuery = query(collection(this.db, "WorkoutTemplates"));
-    this.templates$ = collectionData(templatesQuery, { idField: 'id' });
+    this.db.getWorkoutTemplateDocs()
+    .then((docs) => {
+      this.templates$ = docs;
+    })
     this.loaded = true;
   }
 
+  //TODO: fix this. ugly!
   createTemplate() {
     const isExistingTemplate = this.activeTab.value === 0;
-    // const templateName = isExistingTemplate ? this.templateName : this.selectedTemplateId;
-    //if templateLinkId is null, throw an error. shouldn't happen with proper validation in forms though
-    this.router.navigateByUrl(`/add`, { 
-      state: {
-        isExistingTemplate: isExistingTemplate,
-        templateDoc: this.selectedTemplate,
-        templateName: this.templateName
-      }
-    });
-    /*
-    if activeTab is on new template then we pass new template name to AddWorkoutComponent
-    else we pass in the collection
-    ok basically we hit /add/:templateName
-
-    leave it to addworkoutcomponent to figure out if it's new or not. 
-    then it can insert the doc into templates collection appropriately.
-    */
+    const templateState = { 
+      isExistingTemplate: isExistingTemplate,
+      templateId: "",
+      templateName: ""
+    };
+    if (isExistingTemplate) {
+      templateState.templateId = this.selectedTemplate.id,
+      templateState.templateName = this.selectedTemplate.displayName
+    } else {
+      templateState.templateId = Util.pascalCase(this.createTemplateName);
+      templateState.templateName = this.createTemplateName;
+    }
+    this.router.navigateByUrl(`/add`, { state: templateState });
   }
 }

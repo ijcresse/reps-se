@@ -1,7 +1,7 @@
 <mat-expansion-panel (opened)="panelOpened()">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <h3 class="subtitle-1">Add Workout Day</h3>
+            <h3 class="subtitle-1">Add Day</h3>
         </mat-panel-title>
         <mat-panel-description>
             <mat-icon>add_circle</mat-icon>
@@ -28,9 +28,9 @@
                 <ng-template matTabContent>
                     <mat-form-field class="form-field">
                         <mat-label>Template Name</mat-label>
-                        <input required matInput [(ngModel)]="templateName" />
-                        @if (templateName) {
-                            <button matSuffix mat-icon-button aria-label="clear" (click)="templateName=''">
+                        <input required matInput [(ngModel)]="createTemplateName" />
+                        @if (createTemplateName) {
+                            <button matSuffix mat-icon-button aria-label="clear" (click)="createTemplateName=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         }
