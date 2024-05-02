@@ -13,6 +13,7 @@ import {
 import { Workout } from '../../workout.interface';
 import { AerobicFieldsComponent } from '../aerobic-fields/aerobic-fields.component';
 import { AnaerobicFieldsComponent } from '../anaerobic-fields/anaerobic-fields.component';
+import { FirestoreService } from '../../firestore.service';
 
 //contains an individual workout instance for a given workout partner.
 @Component({
@@ -33,7 +34,7 @@ export class WorkoutInstanceComponent {
   @Input() templateColor!: string;
   @Output() panelColorChange: EventEmitter<string> = new EventEmitter<string>();
 
-  db: Firestore = inject(Firestore);
+  db: FirestoreService = inject(FirestoreService);
   //TODO: figure out enum in angular template
   //error, loading, loaded, empty respectively
   
@@ -42,25 +43,18 @@ export class WorkoutInstanceComponent {
   
   async ngOnInit() {
     const instancePath = `${this.userPath}/${this.user}/Instances`;
-    const instanceCollection = collection(this.db, instancePath);
-    const mostRecentInstance = query(instanceCollection,
-      orderBy("date", "desc"),
-      limit(1)
-    )
-    this.loadInstance(mostRecentInstance);
-  }
-
-  async loadInstance(mostRecentInstance: Query<DocumentData, DocumentData>) {
-    const instanceSnapshot = await getDocs(mostRecentInstance);
-    if (!instanceSnapshot.empty) {
-      instanceSnapshot.forEach((doc) => {
+    this.db.getLastWorkoutInstanceForUser(instancePath, this.user)
+    .then((snapshots) => {
+      snapshots.forEach((doc) => {
         if (doc.exists()) {
           this.instanceId = doc.id;
           this.workout.userPerformance[this.user].instanceData = doc.data();
         }
       })
-    }
-    this.currentState = 'loaded';
+    })
+    .finally(() => {
+      this.currentState = 'loaded';
+    })
   }
 
   //bubble up to workout-panel

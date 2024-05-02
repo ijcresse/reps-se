@@ -4,6 +4,7 @@ import { Firestore, collectionData } from '@angular/fire/firestore';
 import { 
   DocumentData, 
   DocumentReference, 
+  DocumentSnapshot, 
   collection, 
   doc, 
   getDoc, 
@@ -27,6 +28,24 @@ export class FirestoreService {
 
   constructor() { }
 
+  //General utilities/passthru functionality
+  getRefFromCollectionPath(path: string): DocumentReference {
+    return doc(collection(this.db, path));
+  }
+
+  getRefFromDocPath(path: string): DocumentReference {
+    return doc(this.db, path);
+  }
+
+  async setDoc(ref: DocumentReference, doc: DocumentData): Promise<void> {
+    return await setDoc(ref, doc);
+  }
+
+  async getDoc(ref: DocumentReference): Promise<DocumentSnapshot> {
+    return await getDoc(ref);
+  }
+
+  //home
   async getHistoryDocs(): Promise<DocumentData[]> {
     const q = query(
       collection(this.db, "History"), 
@@ -41,10 +60,14 @@ export class FirestoreService {
     return historyDocs;
   }
 
-  async getHistoryInstanceDocOrNull(instanceRef: string): Promise<DocumentData> {
-    return await getDoc(doc(this.db, instanceRef));
+  //workout-instance
+  async getLastWorkoutInstanceForUser(path: string, user: string) {
+    const ref = collection(this.db, path);
+    const q = query(ref, orderBy("date", "desc"), limit(1));
+    return await getDocs(q);
   }
 
+  //add-template
   async getWorkoutTemplateDocs(): Promise<Observable<DocumentData[]>> {
     const q = query(collection(this.db, "WorkoutTemplates"));
     return collectionData(q, { idField: 'id' });
@@ -59,6 +82,7 @@ export class FirestoreService {
     await setDoc(ref, templateDoc);
   }
 
+  //add-route
   async loadWorkoutTemplate(workoutPath: string): Promise<Workout[]> {
     const q = query(collection(this.db, workoutPath));
     const snapshot = await getDocs(q);
@@ -82,14 +106,6 @@ export class FirestoreService {
     return workoutDocs;
   }
 
-  makeCollectionRefFromPath(path: string) {
-    return doc(collection(this.db, path));
-  }
-
-  makeDocRefFromPath(path: string) {
-    return doc(this.db, path);
-  }
-
   async saveFinishedWorkout(
       workoutInstances: Map<DocumentReference, DocumentData>, 
       workoutRefs: DocumentReference[], 
@@ -106,7 +122,7 @@ export class FirestoreService {
       batch.set(ref, doc);
     }
 
-    const historyRef = this.makeCollectionRefFromPath("History");
+    const historyRef = this.getRefFromCollectionPath("History");
     const historyDoc = {
       date: serverTimestamp(),
       displayName: templateName,

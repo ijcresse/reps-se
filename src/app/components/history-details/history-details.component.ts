@@ -2,12 +2,12 @@ import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   DocumentData,
-  Firestore, 
   doc,
   getDoc
 } from '@angular/fire/firestore';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
+import { FirestoreService } from '../../firestore.service';
 
 @Component({
   selector: 'app-history-details',
@@ -21,17 +21,19 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './history-details.component.scss'
 })
 export class HistoryDetailsComponent {
-  // TODO: leverage the actual reference type for firestore
   @Input() instance$!: DocumentData;
-  db: Firestore = inject(Firestore);
+  db: FirestoreService = inject(FirestoreService);
   instanceHistory$: DocumentData = {};
 
   async ngOnInit() {
-    const historyDetails = await getDoc(doc(this.db, this.instance$['instanceRef']));
-    if (historyDetails.exists()) {
-      this.instanceHistory$ = historyDetails.data();
-    } else {
-      console.error("WorkoutInstance could not be retrieved from Firestore!", this.instance$['instanceRef']);
-    }
+    const ref = this.db.getRefFromDocPath(this.instance$['instanceRef']);
+    this.db.getDoc(ref)
+    .then((doc) => {
+      if (doc.exists()) {
+        this.instanceHistory$ = doc.data();
+      } else {
+        console.error("WorkoutInstance could not be retrieved from Firestore!", this.instance$['instanceRef']);
+      }
+    });
   }
 }

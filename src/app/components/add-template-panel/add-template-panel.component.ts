@@ -2,8 +2,6 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Firestore, collection, collectionData } from '@angular/fire/firestore'
-import { query } from 'firebase/firestore';
 import { Observable, of } from 'rxjs';
 
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -15,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, FormControl } from '@angular/forms';
 import { Util } from '../../util';
+import { FirestoreService } from '../../firestore.service';
 
 @Component({
   selector: 'app-add-template-panel',
@@ -35,7 +34,7 @@ import { Util } from '../../util';
   styleUrl: './add-template-panel.component.scss'
 })
 export class AddTemplatePanelComponent {
-  db: Firestore = inject(Firestore);
+  db: FirestoreService = inject(FirestoreService);
   templates$: Observable<any[]> = of();
   activeTab = new FormControl(0);
   loaded: boolean = false;
@@ -49,12 +48,14 @@ export class AddTemplatePanelComponent {
     if (this.loaded) {
       return;
     }
-    const templatesQuery = query(collection(this.db, "WorkoutTemplates"));
-    this.templates$ = collectionData(templatesQuery, { idField: 'id' });
+    this.db.getWorkoutTemplateDocs()
+    .then((docs) => {
+      this.templates$ = docs;
+    })
     this.loaded = true;
   }
 
-  //perhaps i should have load template vs create template?
+  //TODO: fix this. ugly!
   createTemplate() {
     const isExistingTemplate = this.activeTab.value === 0;
     const templateState = { 

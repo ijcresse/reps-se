@@ -97,7 +97,7 @@ export class AddRouteComponent {
           didWorkout = true;
 
           const instancePath = `${this.workoutPath}/${workout.workoutId}/Users/${user}/Instances`
-          const instanceRef = this.dbService.makeCollectionRefFromPath(instancePath);
+          const instanceRef = this.dbService.getRefFromCollectionPath(instancePath);
           workoutInstances.set(instanceRef, workout.userPerformance[user].instanceData);
 
           historyDocs.push({
@@ -109,7 +109,7 @@ export class AddRouteComponent {
       })
 
       if (didWorkout) {
-        const workoutRef = this.dbService.makeDocRefFromPath(`${this.workoutPath}/${workout.workoutId}`);
+        const workoutRef = this.dbService.getRefFromDocPath(`${this.workoutPath}/${workout.workoutId}`);
         workouts.push(workoutRef);
       }
     })
