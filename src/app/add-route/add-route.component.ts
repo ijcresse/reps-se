@@ -1,4 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { 
+  Component, 
+  inject,
+  AfterViewInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { DocumentData, DocumentReference, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
@@ -38,6 +44,8 @@ export class AddRouteComponent {
   workouts$: Workout[] = [];
   historyDocs: HistoryInstance[] = [];
 
+  // @ViewChildren(WorkoutPanelComponent) workoutComponents!: QueryList<WorkoutPanelComponent>;
+
   constructor(private _snackBar: MatSnackBar) { 
     this.isExistingTemplate = history.state.isExistingTemplate;
     this.loaded = false;
@@ -64,6 +72,12 @@ export class AddRouteComponent {
     }
   }
 
+  //TODO:
+  //irrelevant, perhaps? can probably assume user will act slower than ui/backend
+  // ngAfterViewInit() {
+    //do something
+  // }
+
   addWorkout(workout: Workout) {
     this.workouts$.push(workout);
   }
@@ -83,6 +97,12 @@ export class AddRouteComponent {
       this.openSnackBar("No completed workouts detected!", "OK");
     }
   }
+
+  // async finishWorkoutTemp() {
+  //   for (let i = 0; i < this.workoutComponents.length; i++) {
+  //     let foo = this.workoutComponents.get(i).getWorkoutData();
+  //   }
+  // }
 
   //assembles information from each workout and creates historyDocs at the same time
   createDocs(

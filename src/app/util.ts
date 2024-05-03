@@ -5,6 +5,7 @@ export class Util {
     }
 }
 
+//TODO: post refactor add this stuff
 //builds paths to collections.
 //appends slash for you.
 export class CollectionPathBuilder {

@@ -1,4 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { 
+  Component, 
+  Input,
+  AfterViewInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -24,6 +30,8 @@ export class WorkoutPanelComponent {
   @Input() templateColor!: string;
   @Input() index!: number;
 
+  // @ViewChildren(WorkoutInstanceComponent) instanceComponents!: QueryList<WorkoutInstanceComponent>;
+
   //initially empty - workouts don't get color until they're performed.
   panelColor: string = "";
   userPath: string = "";
@@ -31,4 +39,16 @@ export class WorkoutPanelComponent {
   ngOnInit() {
     this.userPath = `${this.workoutPath}/${this.workout.workoutId}/Users`;
   }
+
+  //assembles data for add-route
+  // getWorkoutData() {
+
+  //   this.fetchDataFromInstance();
+  // }
+
+  // fetchDataFromInstance() {
+  //   for (let i = 0; i < this.instanceComponents.length; i++) {
+  //     this.instanceComponents.get(i).getInstanceData();
+  //   }
+  // }
 }
