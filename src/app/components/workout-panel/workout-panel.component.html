@@ -12,16 +12,15 @@
         <!-- TODO: hardcoded users is fine for us, but this is a good place to expand -->
         <!-- ex: UserGroup collection of registered users -->
         <app-workout-instance 
+            [workoutType] = "workout.workoutData['type']"
             [userPath]="userPath" 
-            [workout]="workout" 
-            [templateColor]="templateColor"
-            user="Ian">
-        </app-workout-instance>
+            user="Ian"
+            [templateColor]="templateColor"></app-workout-instance>
         <app-workout-instance 
+            [workoutType] = "workout.workoutData['type']"
             [userPath]="userPath" 
-            [workout]="workout" 
-            [templateColor]="templateColor" 
-            user="Holly">
-        </app-workout-instance>
+            user="Holly"
+            [templateColor]="templateColor"></app-workout-instance>
     </ng-template>
+    <button mat-stroked-button (click)="fetchDataFromInstance()">test fetching data from instance</button>
 </mat-expansion-panel>

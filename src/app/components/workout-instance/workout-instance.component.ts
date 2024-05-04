@@ -12,7 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
-import { Workout } from '../../workout.interface';
 import { FirestoreService } from '../../firestore.service';
 
 //contains an individual workout instance for a given workout partner.
@@ -33,7 +32,7 @@ import { FirestoreService } from '../../firestore.service';
 })
 export class WorkoutInstanceComponent {
   @Input() userPath!: string;
-  @Input() workout!: Workout;
+  @Input() workoutType!: number;
   @Input() user!: string;
   @Input() templateColor!: string;
   @Output() panelColorChange: EventEmitter<string> = new EventEmitter<string>();
@@ -44,16 +43,17 @@ export class WorkoutInstanceComponent {
   //TODO: figure out enum in angular template
   //error, loading, loaded, empty respectively
   
-  instanceId: string = "";
+  instancePath: string = "";
+  instanceId: string = ""; //what is this for?
   currentState: string = "loading";
 
   fields: any;
   
   async ngOnInit() {
-    const instancePath = `${this.userPath}/${this.user}/Instances`;
-    this.fields = new Fields(this.workout.workoutData['type']);
+    this.instancePath = `${this.userPath}/${this.user}/Instances`;
+    this.fields = new Fields(this.workoutType);
 
-    this.db.getLastWorkoutInstanceForUser(instancePath, this.user)
+    this.db.getLastWorkoutInstanceForUser(this.instancePath, this.user)
     .then((snapshots) => {
       snapshots.forEach((doc) => {
         if (doc.exists()) {
@@ -85,10 +85,10 @@ export class WorkoutInstanceComponent {
     this.fields.performance[key]++;
   }
 
-  //assembles data for workout
-  // getInstanceData() {
-
-  // }
+  // assembles data for workout
+  getInstanceData(): [string, DocumentData] {
+    return [this.instancePath, this.fields];
+  }
 }
 
 //TODO: is this where a converter would be handy?

@@ -11,6 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 import { Workout } from '../../workout.interface';
 import { WorkoutInstanceComponent } from '../workout-instance/workout-instance.component';
+import { DocumentData } from 'firebase/firestore';
 
 //simple containing expansionpanel for individual workout instances within.
 @Component({
@@ -30,7 +31,7 @@ export class WorkoutPanelComponent {
   @Input() templateColor!: string;
   @Input() index!: number;
 
-  // @ViewChildren(WorkoutInstanceComponent) instanceComponents!: QueryList<WorkoutInstanceComponent>;
+  @ViewChildren(WorkoutInstanceComponent) instanceComponents?: QueryList<WorkoutInstanceComponent>;
 
   //initially empty - workouts don't get color until they're performed.
   panelColor: string = "";
@@ -41,14 +42,22 @@ export class WorkoutPanelComponent {
   }
 
   //assembles data for add-route
-  // getWorkoutData() {
+  getWorkoutData() {
+    const workoutDoc: DocumentData = {
+      
+    }
+  }
 
-  //   this.fetchDataFromInstance();
-  // }
-
-  // fetchDataFromInstance() {
-  //   for (let i = 0; i < this.instanceComponents.length; i++) {
-  //     this.instanceComponents.get(i).getInstanceData();
-  //   }
-  // }
+  fetchDataFromInstance() {
+    let instanceData: DocumentData[] = [];
+    if (this.instanceComponents) {
+      for (let i = 0; i < this.instanceComponents.length; i++) {
+        const instance = this.instanceComponents.get(i);
+        if (instance) {
+          instanceData.push(instance.getInstanceData());
+        }
+      }
+    }
+    return instanceData;
+  }
 }
