@@ -116,7 +116,6 @@ class Fields {
   }
 
   setData(data: DocumentData) {
-    console.log('fields setting data from db', data);
     this.date = data['date'];
     this.performance = data['performance'];
   }

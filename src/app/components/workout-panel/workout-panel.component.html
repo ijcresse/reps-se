@@ -1,7 +1,7 @@
 <mat-expansion-panel [ngClass]="panelColor">
     <mat-expansion-panel-header>
         <mat-panel-title [ngClass]="panelColor">
-            <h3 class="subtitle-1">{{ workout.workoutData['displayName'] }}</h3>
+            <h3 class="subtitle-1">{{ workoutName }}</h3>
         </mat-panel-title>
         <!-- TODO: fix a bug where the server hasn't set the timestamp object properly yet on a newly added workout -->
         <!-- <mat-panel-description>
@@ -12,15 +12,14 @@
         <!-- TODO: hardcoded users is fine for us, but this is a good place to expand -->
         <!-- ex: UserGroup collection of registered users -->
         <app-workout-instance 
-            [workoutType] = "workout.workoutData['type']"
+            [workoutType] = "workoutType"
             [userPath]="userPath" 
             user="Ian"
             [templateColor]="templateColor"></app-workout-instance>
         <app-workout-instance 
-            [workoutType] = "workout.workoutData['type']"
+            [workoutType] = "workoutType"
             [userPath]="userPath" 
             user="Holly"
             [templateColor]="templateColor"></app-workout-instance>
     </ng-template>
-    <button mat-stroked-button (click)="fetchDataFromInstance()">test fetching data from instance</button>
 </mat-expansion-panel>

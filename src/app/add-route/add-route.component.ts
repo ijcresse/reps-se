@@ -41,10 +41,11 @@ export class AddRouteComponent {
   templateName;
   workoutPath: string = "";
 
+  //want to update this. least privileged. hand stuff off and then move on
+  //hell maybe go back to Observable for this
   workouts$: Workout[] = [];
-  historyDocs: HistoryInstance[] = [];
 
-  // @ViewChildren(WorkoutPanelComponent) workoutComponents!: QueryList<WorkoutPanelComponent>;
+  @ViewChildren(WorkoutPanelComponent) workoutComponents!: QueryList<WorkoutPanelComponent>;
 
   constructor(private _snackBar: MatSnackBar) { 
     this.isExistingTemplate = history.state.isExistingTemplate;
@@ -63,7 +64,6 @@ export class AddRouteComponent {
         this.loaded = true;
       });
     } else {
-      // this.loadExistingTemplate();
       await this.dbService.loadWorkoutTemplate(this.workoutPath)
       .then((docs) => {
         this.workouts$ = docs;
@@ -71,12 +71,6 @@ export class AddRouteComponent {
       })
     }
   }
-
-  //TODO:
-  //irrelevant, perhaps? can probably assume user will act slower than ui/backend
-  // ngAfterViewInit() {
-    //do something
-  // }
 
   addWorkout(workout: Workout) {
     this.workouts$.push(workout);
@@ -98,11 +92,20 @@ export class AddRouteComponent {
     }
   }
 
-  // async finishWorkoutTemp() {
-  //   for (let i = 0; i < this.workoutComponents.length; i++) {
-  //     let foo = this.workoutComponents.get(i).getWorkoutData();
-  //   }
-  // }
+  //next up: have finishworkout use this instead, and pass everything to dbservice.
+  //also: pare down add-route to just what it needs. does it need the workout array? not really
+  async fetchWorkoutData() {
+    let workoutData = [];
+    for (let i = 0; i < this.workoutComponents.length; i++) {
+      const workoutComponent = this.workoutComponents.get(i);
+      if (workoutComponent) {
+        workoutData.push(workoutComponent.getWorkoutData());
+      }
+    }
+    //fetches everything, even if nothing was done
+    //so check instanceData.size
+    console.log(workoutData);
+  }
 
   //assembles information from each workout and creates historyDocs at the same time
   createDocs(
