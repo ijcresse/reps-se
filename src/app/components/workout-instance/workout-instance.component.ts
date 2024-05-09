@@ -74,6 +74,7 @@ export class WorkoutInstanceComponent {
   updateFields() {
     //set performed = true
     this.panelColor = this.templateColor;
+    this.currentState = 'performed';
     this.panelColorChange.emit(this.templateColor);
   }
 
@@ -85,13 +86,21 @@ export class WorkoutInstanceComponent {
     this.fields.performance[key]++;
   }
 
-  // assembles data for workout
-  getInstanceData(): [string, DocumentData] {
-    return [this.instancePath, this.fields];
+  wasPerformed(): boolean {
+    return this.currentState === 'performed';
+  }
+  
+  getData(): DocumentData {
+    return this.fields;
+  }
+
+  getPath(): string {
+    return this.instancePath;
   }
 }
 
 //TODO: is this where a converter would be handy?
+//TODO: notes field is having some trouble updating with 2 way binding
 class Fields {
   performance: AerobicPerformance | AnaerobicPerformance;
   date: any;

@@ -99,11 +99,12 @@ export class AddRouteComponent {
     for (let i = 0; i < this.workoutComponents.length; i++) {
       const workoutComponent = this.workoutComponents.get(i);
       if (workoutComponent) {
-        workoutData.push(workoutComponent.getWorkoutData());
+        const data = workoutComponent.getWorkoutData();
+        if (data.instanceData.size > 0) {
+          workoutData.push(data);
+        }
       }
     }
-    //fetches everything, even if nothing was done
-    //so check instanceData.size
     console.log(workoutData);
   }
 

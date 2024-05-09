@@ -1,6 +1,6 @@
 @if ( currentState === 'loading' ) {
     Loading instance data...   
-} @else if ( currentState !== 'loaded') {
+} @else if ( currentState === 'error') {
     Error! Sorry, something went wrong.
 } @else {
     <div [ngClass]="panelColor" class="container">

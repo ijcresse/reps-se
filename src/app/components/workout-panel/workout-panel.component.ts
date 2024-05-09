@@ -95,9 +95,8 @@ export class WorkoutPanelComponent {
     if (this.instanceComponents) {
       for (let i = 0; i < this.instanceComponents.length; i++) {
         const instance = this.instanceComponents.get(i);
-        if (instance) {
-          const [path, data] = instance.getInstanceData();
-          instanceData.set(path, data);
+        if (instance && instance.wasPerformed()) {
+          instanceData.set(instance.getPath(), instance.getData());
         }
       }
     }
