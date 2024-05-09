@@ -1,10 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { 
-  DocumentData,
-  doc,
-  getDoc
-} from '@angular/fire/firestore';
+import { DocumentData } from '@angular/fire/firestore';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { FirestoreService } from '../../firestore.service';

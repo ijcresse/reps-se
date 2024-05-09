@@ -11,6 +11,11 @@
     <mat-divider></mat-divider>
     <h3 class="headline-2">History:</h3>
     @for (workout of workouts$; track workout; let idx = $index) {
-        <app-workout-panel [workout]="workout" [workoutPath]="workoutPath" [templateColor]="templateId" [index]="idx"></app-workout-panel>
+        <app-workout-panel
+            [workoutId]="workout.id"
+            [workoutName]="workout.displayName"
+            [workoutPath]="workout.path"
+            [workoutType]="workout.type"
+            [templateColor]="templateId"></app-workout-panel>
     }
 </section>

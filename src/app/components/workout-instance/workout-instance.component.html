@@ -1,23 +1,34 @@
 @if ( currentState === 'loading' ) {
     Loading instance data...   
-} @else if ( currentState !== 'loaded' && currentState !== 'empty') {
+} @else if ( currentState === 'error') {
     Error! Sorry, something went wrong.
 } @else {
-    @if ( workout.workoutData['type'] === 0) {
-        <app-aerobic-fields ng-repeat="(user) in workout.userPerformance" 
-            [(aerobicData)]="workout.userPerformance[user]" 
-            [templateColor]="templateColor"
-            [workoutPanelColor]="panelColor"
-            (workoutPanelColorChange)="onPanelColorChange($event)"
-            [user]="user">
-        </app-aerobic-fields>
-    } @else {
-        <app-anaerobic-fields ng-repeat="(user) in workout.userPerformance" 
-            [(anaerobicData)]="workout.userPerformance[user]" 
-            [templateColor]="templateColor"
-            [workoutPanelColor]="panelColor"
-            (workoutPanelColorChange)="onPanelColorChange($event)"
-            [user]="user">
-        </app-anaerobic-fields>
-    }
+    <div [ngClass]="panelColor" class="container">
+        <div class="form-header">
+            <p class="body-1">{{ user }}</p>
+            <button mat-stroked-button color="primary" (click)="updateFields()">Done!</button>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-container">
+            <div *ngFor="let field of fields.performance | keyvalue" class="field">
+                @if (field.key === 'notes') {
+                    <mat-form-field class="notes">
+                        <mat-label>{{ field.key }}</mat-label>
+                        <textarea matInput [(ngModel)]="field.value"></textarea>
+                    </mat-form-field>
+                } @else {
+                    <p class="body-1">{{ field.key }}</p>
+                    <button mat-stroked-button (click)="decrement(field.key)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <mat-form-field>
+                        <input matInput type="number" [(ngModel)]="field.value" />
+                    </mat-form-field>
+                    <button mat-stroked-button (click)="increment(field.key)">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
 }

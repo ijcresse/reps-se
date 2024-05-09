@@ -1,7 +1,6 @@
 import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
-import { DocumentData, DocumentReference, serverTimestamp } from 'firebase/firestore';
+import { DocumentData, serverTimestamp } from 'firebase/firestore';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
@@ -47,42 +46,28 @@ export class AddWorkoutPanelComponent {
     { value: 0, name: 'aerobic' },
     { value: 1, name: 'anaerobic' }
   ]
-  selectedType = this.workoutType[0];
+  selectedType = this.workoutType[0].value;
 
   async addWorkout() {
     const workoutId = Util.pascalCase(this.workoutName);
     const path = `WorkoutTemplates/${this.templateId}/Workouts/${workoutId}`;
     const ref = this.db.getRefFromDocPath(path);
-    const doc: DocumentData = {
+    const doc: Workout = {
       id: workoutId,
-      date: serverTimestamp(),
+      path: path,
       displayName: this.workoutName,
       type: this.selectedType
     };
-    const newWorkout: Workout = {
-      workoutId: workoutId,
-      workoutData: doc,
-      userPerformance: {
-        'Ian': {
-          performed: false,
-          instanceData: {}
-        },
-        'Holly': {
-          performed: false,
-          instanceData: {}
-        }
-      }
-    }
     this.db.setDoc(ref, doc)
     .then(() => {
-      this.addWorkoutEvent.emit(newWorkout)
+      this.addWorkoutEvent.emit(doc)
       this.addUsersToWorkout(path);
     });
   }
 
   async addUsersToWorkout(workoutPath: string) {
     const userDoc: DocumentData = {
-      latestDate: serverTimestamp()
+      date: serverTimestamp()
     };
     //TODO: fetch this from db
     const users = ['Ian', 'Holly'];

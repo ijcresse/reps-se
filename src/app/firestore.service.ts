@@ -37,6 +37,10 @@ export class FirestoreService {
     return doc(this.db, path);
   }
 
+  objectifyData(data: any) {
+    return JSON.parse(JSON.stringify(data));
+  }
+
   async setDoc(ref: DocumentReference, doc: DocumentData): Promise<void> {
     return await setDoc(ref, doc);
   }
@@ -61,7 +65,7 @@ export class FirestoreService {
   }
 
   //workout-instance
-  async getLastWorkoutInstanceForUser(path: string, user: string) {
+  async getLastWorkoutInstanceForUser(path: string) {
     const ref = collection(this.db, path);
     const q = query(ref, orderBy("date", "desc"), limit(1));
     return await getDocs(q);
@@ -88,48 +92,44 @@ export class FirestoreService {
     const snapshot = await getDocs(q);
     let workoutDocs: Workout[] = [];
     snapshot.forEach((doc) => {
+      const data = doc.data();
       workoutDocs.push({
-        workoutId: doc.id,
-        workoutData: doc.data(),
-        userPerformance: {
-          'Ian': {
-            performed: false,
-            instanceData: {}
-          },
-          'Holly': {
-            performed: false,
-            instanceData: {}
-          }
-        }
-      })
+        id: doc.id,
+        displayName: data['displayName'],
+        path: `${workoutPath}/${doc.id}`,
+        type: data['type']
+      });
     });
     return workoutDocs;
   }
 
-  async saveFinishedWorkout(
-      workoutInstances: Map<DocumentReference, DocumentData>, 
-      workoutRefs: DocumentReference[], 
-      historyInstances: DocumentData[],
-      templateName: string
-  ): Promise<void> {
+  //after a workout is complete, save updated instances and add a history entry
+  async saveFinishedWorkoutTemplate(templateName: string, instanceMap: any): Promise<void> {
     const batch = writeBatch(this.db);
-
-    workoutRefs.forEach(workoutRef => {
-      batch.update(workoutRef, {latestWorkout: serverTimestamp()});
-    });
-    
-    for (const [ref, doc] of workoutInstances) {
-      batch.set(ref, doc);
+    const historyRef = this.getRefFromCollectionPath("History");
+    let historyInstances = [];
+    for (const [path, data] of instanceMap) {
+      const instanceRef = this.getRefFromCollectionPath(path);
+      const objectifiedData: DocumentData = this.objectifyData(data);
+      //need to reset date here - otherwise becomes a methodref
+      objectifiedData['date'] = serverTimestamp();
+      batch.set(instanceRef, objectifiedData);
+      
+      const pathValues = path.split('/');
+      //TODO: all this is a little irrelevant. shouldn't it just be the instanceRef path?
+      //from there i could pass it all to a splitter/pathutil and manage it that way.
+      historyInstances.push({
+        user: pathValues[4],
+        instanceRef: instanceRef.path,
+        workoutName: pathValues[3]
+      })
     }
 
-    const historyRef = this.getRefFromCollectionPath("History");
-    const historyDoc = {
+    batch.set(historyRef, {
       date: serverTimestamp(),
       displayName: templateName,
       instances: historyInstances
-    }
-    batch.set(historyRef, historyDoc);
-
+    });
     return await batch.commit();
   }
 }

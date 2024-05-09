@@ -1,7 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { 
+  Component, 
+  inject,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Firestore, collection } from '@angular/fire/firestore';
-import { DocumentData, DocumentReference, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,8 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
 import { FirestoreService } from '../firestore.service';
-import { Workout, HistoryInstance } from '../workout.interface';
-import { Util } from '../util';
+import { Workout } from '../workout.interface';
 
 @Component({
   selector: 'app-add-route',
@@ -35,8 +38,11 @@ export class AddRouteComponent {
   templateName;
   workoutPath: string = "";
 
+  //want to update this. least privileged. hand stuff off and then move on
+  //hell maybe go back to Observable for this
   workouts$: Workout[] = [];
-  historyDocs: HistoryInstance[] = [];
+
+  @ViewChildren(WorkoutPanelComponent) workoutComponents!: QueryList<WorkoutPanelComponent>;
 
   constructor(private _snackBar: MatSnackBar) { 
     this.isExistingTemplate = history.state.isExistingTemplate;
@@ -55,7 +61,6 @@ export class AddRouteComponent {
         this.loaded = true;
       });
     } else {
-      // this.loadExistingTemplate();
       await this.dbService.loadWorkoutTemplate(this.workoutPath)
       .then((docs) => {
         this.workouts$ = docs;
@@ -69,50 +74,33 @@ export class AddRouteComponent {
   }
 
   async finishWorkout() {
-    const workoutInstances: Map<DocumentReference, DocumentData> = new Map();
-    const workouts: DocumentReference[] = [];
-    const historyDocs: DocumentData[] = [];
-    this.createDocs(workoutInstances, workouts, historyDocs);
-
-    if (workouts.length > 0 && historyDocs.length > 0) {
-      await this.dbService.saveFinishedWorkout(workoutInstances, workouts, historyDocs, this.templateName)
+    const instanceData = this.fetchInstanceData();
+    if (instanceData && instanceData.size > 0) {
+      await this.dbService.saveFinishedWorkoutTemplate(this.templateName, instanceData)
       .then(() => {
         this.openSnackBar(`${this.templateName} complete!`, "OK");
       });
+    } else if (instanceData && instanceData.size === 0) {
+      this.openSnackBar("Error: No workouts performed. Have you hit 'Done'?", "OK");
     } else {
-      this.openSnackBar("No completed workouts detected!", "OK");
+      this.openSnackBar("Error: something went wrong. Bug Ian", "OK");
     }
   }
 
-  //assembles information from each workout and creates historyDocs at the same time
-  createDocs(
-      workoutInstances: Map<DocumentReference, DocumentData>, 
-      workouts:  DocumentReference[],
-      historyDocs: DocumentData[]
-  ) {
-    this.workouts$.forEach((workout) => {
-      let didWorkout = false;
-      Object.keys(workout.userPerformance).forEach((user) => {
-        if (workout.userPerformance[user].performed) {
-          didWorkout = true;
-
-          const instancePath = `${this.workoutPath}/${workout.workoutId}/Users/${user}/Instances`
-          const instanceRef = this.dbService.getRefFromCollectionPath(instancePath);
-          workoutInstances.set(instanceRef, workout.userPerformance[user].instanceData);
-
-          historyDocs.push({
-            user: user,
-            instanceRef:`${instancePath}/${instanceRef.id}`,
-            workoutName: workout.workoutData['displayName']
-          })
-        }
-      })
-
-      if (didWorkout) {
-        const workoutRef = this.dbService.getRefFromDocPath(`${this.workoutPath}/${workout.workoutId}`);
-        workouts.push(workoutRef);
+  fetchInstanceData() {
+    let instanceData = new Map<string, DocumentData>();
+    for (let i = 0; i < this.workoutComponents.length; i++) {
+      const workoutComponent = this.workoutComponents.get(i);
+      if (!workoutComponent) {
+        console.error("Error: something went wrong fetching data from component");
+        return;
       }
-    })
+      const data = workoutComponent.getInstanceData();
+      for (const [key, val] of data) {  
+        instanceData.set(key, val);
+      }
+    }
+    return instanceData;
   }
 
   openSnackBar(message: string, action: string) {
