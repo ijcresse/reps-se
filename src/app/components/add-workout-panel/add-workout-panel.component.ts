@@ -53,29 +53,15 @@ export class AddWorkoutPanelComponent {
     const workoutId = Util.pascalCase(this.workoutName);
     const path = `WorkoutTemplates/${this.templateId}/Workouts/${workoutId}`;
     const ref = this.db.getRefFromDocPath(path);
-    const doc: DocumentData = {
+    const doc: Workout = {
       id: workoutId,
-      date: serverTimestamp(),
+      path: path,
       displayName: this.workoutName,
-      type: this.selectedType
+      type: this.selectedType.value
     };
-    const newWorkout: Workout = {
-      workoutId: workoutId,
-      workoutData: doc,
-      userPerformance: {
-        'Ian': {
-          performed: false,
-          instanceData: {}
-        },
-        'Holly': {
-          performed: false,
-          instanceData: {}
-        }
-      }
-    }
     this.db.setDoc(ref, doc)
     .then(() => {
-      this.addWorkoutEvent.emit(newWorkout)
+      this.addWorkoutEvent.emit(doc)
       this.addUsersToWorkout(path);
     });
   }

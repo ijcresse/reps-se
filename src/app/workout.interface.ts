@@ -1,9 +1,10 @@
 import { DocumentData, Timestamp } from "firebase/firestore"
 
 export interface Workout {
-    workoutId: string
-    workoutData: DocumentData,
-    userPerformance: UserPerformance,
+    id: string,
+    displayName: string,
+    path: string,
+    type: number
 }
 
 export interface UserPerformance {

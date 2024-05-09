@@ -77,24 +77,18 @@ export class AddRouteComponent {
   }
 
   async finishWorkout() {
-    const workoutInstances: Map<DocumentReference, DocumentData> = new Map();
-    const workouts: DocumentReference[] = [];
-    const historyDocs: DocumentData[] = [];
-    this.createDocs(workoutInstances, workouts, historyDocs);
-
-    if (workouts.length > 0 && historyDocs.length > 0) {
-      await this.dbService.saveFinishedWorkout(workoutInstances, workouts, historyDocs, this.templateName)
+    const workoutData = this.fetchWorkoutData();
+    if (workoutData.length > 0) {
+      await this.dbService.saveFinishedWorkout(workoutData)
       .then(() => {
-        this.openSnackBar(`${this.templateName} complete!`, "OK");
+        this.openSnackBar(`${this.templateName} complete`, "OK");
       });
     } else {
-      this.openSnackBar("No completed workouts detected!", "OK");
+      this.openSnackBar("Error: No workouts performed. Have you hit 'Done'?", "OK");
     }
   }
 
-  //next up: have finishworkout use this instead, and pass everything to dbservice.
-  //also: pare down add-route to just what it needs. does it need the workout array? not really
-  async fetchWorkoutData() {
+  fetchWorkoutData() {
     let workoutData = [];
     for (let i = 0; i < this.workoutComponents.length; i++) {
       const workoutComponent = this.workoutComponents.get(i);
@@ -105,39 +99,39 @@ export class AddRouteComponent {
         }
       }
     }
-    console.log(workoutData);
+    return workoutData;
   }
 
   //assembles information from each workout and creates historyDocs at the same time
-  createDocs(
-      workoutInstances: Map<DocumentReference, DocumentData>, 
-      workouts:  DocumentReference[],
-      historyDocs: DocumentData[]
-  ) {
-    this.workouts$.forEach((workout) => {
-      let didWorkout = false;
-      Object.keys(workout.userPerformance).forEach((user) => {
-        if (workout.userPerformance[user].performed) {
-          didWorkout = true;
+  // createDocs(
+  //     workoutInstances: Map<DocumentReference, DocumentData>, 
+  //     workouts:  DocumentReference[],
+  //     historyDocs: DocumentData[]
+  // ) {
+  //   this.workouts$.forEach((workout) => {
+  //     let didWorkout = false;
+  //     Object.keys(workout.userPerformance).forEach((user) => {
+  //       if (workout.userPerformance[user].performed) {
+  //         didWorkout = true;
 
-          const instancePath = `${this.workoutPath}/${workout.workoutId}/Users/${user}/Instances`
-          const instanceRef = this.dbService.getRefFromCollectionPath(instancePath);
-          workoutInstances.set(instanceRef, workout.userPerformance[user].instanceData);
+  //         const instancePath = `${this.workoutPath}/${workout.workoutId}/Users/${user}/Instances`
+  //         const instanceRef = this.dbService.getRefFromCollectionPath(instancePath);
+  //         workoutInstances.set(instanceRef, workout.userPerformance[user].instanceData);
 
-          historyDocs.push({
-            user: user,
-            instanceRef:`${instancePath}/${instanceRef.id}`,
-            workoutName: workout.workoutData['displayName']
-          })
-        }
-      })
+  //         historyDocs.push({
+  //           user: user,
+  //           instanceRef:`${instancePath}/${instanceRef.id}`,
+  //           workoutName: workout.workoutData['displayName']
+  //         })
+  //       }
+  //     })
 
-      if (didWorkout) {
-        const workoutRef = this.dbService.getRefFromDocPath(`${this.workoutPath}/${workout.workoutId}`);
-        workouts.push(workoutRef);
-      }
-    })
-  }
+  //     if (didWorkout) {
+  //       const workoutRef = this.dbService.getRefFromDocPath(`${this.workoutPath}/${workout.workoutId}`);
+  //       workouts.push(workoutRef);
+  //     }
+  //   })
+  // }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
