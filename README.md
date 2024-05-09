@@ -14,6 +14,7 @@ A simple workout tracker app to match a couple of use cases:
 ## Installation notes
 
 This project was built on Angular17, with AngularFire v17.
+For ease of use, ensure the Angular CLI and Firebase CLI are installed.
 
 ## Development server
 
