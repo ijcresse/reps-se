@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { 
-  DocumentData,
-  serverTimestamp
-} from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
@@ -53,7 +50,7 @@ export class WorkoutInstanceComponent {
     this.instancePath = `${this.userPath}/${this.user}/Instances`;
     this.fields = new Fields(this.workoutType);
 
-    this.db.getLastWorkoutInstanceForUser(this.instancePath, this.user)
+    this.db.getLastWorkoutInstanceForUser(this.instancePath)
     .then((snapshots) => {
       snapshots.forEach((doc) => {
         if (doc.exists()) {
@@ -72,7 +69,6 @@ export class WorkoutInstanceComponent {
   }
 
   updateFields() {
-    //set performed = true
     this.panelColor = this.templateColor;
     this.currentState = 'performed';
     this.panelColorChange.emit(this.templateColor);
@@ -121,7 +117,6 @@ class Fields {
         notes: ""
       }
     }
-    this.date = serverTimestamp();
   }
 
   setData(data: DocumentData) {

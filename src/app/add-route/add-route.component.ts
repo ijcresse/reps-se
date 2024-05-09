@@ -1,13 +1,11 @@
 import { 
   Component, 
   inject,
-  AfterViewInit,
   QueryList,
   ViewChildren
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Firestore, collection } from '@angular/fire/firestore';
-import { DocumentData, DocumentReference, doc, getDocs, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -16,8 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
 import { FirestoreService } from '../firestore.service';
-import { Workout, HistoryInstance } from '../workout.interface';
-import { Util } from '../util';
+import { Workout } from '../workout.interface';
 
 @Component({
   selector: 'app-add-route',
@@ -77,61 +74,34 @@ export class AddRouteComponent {
   }
 
   async finishWorkout() {
-    const workoutData = this.fetchWorkoutData();
-    if (workoutData.length > 0) {
-      await this.dbService.saveFinishedWorkout(workoutData)
+    const instanceData = this.fetchInstanceData();
+    if (instanceData && instanceData.size > 0) {
+      await this.dbService.saveFinishedWorkoutTemplate(this.templateName, instanceData)
       .then(() => {
-        this.openSnackBar(`${this.templateName} complete`, "OK");
+        this.openSnackBar(`${this.templateName} complete!`, "OK");
       });
-    } else {
+    } else if (instanceData && instanceData.size === 0) {
       this.openSnackBar("Error: No workouts performed. Have you hit 'Done'?", "OK");
+    } else {
+      this.openSnackBar("Error: something went wrong. Bug Ian", "OK");
     }
   }
 
-  fetchWorkoutData() {
-    let workoutData = [];
+  fetchInstanceData() {
+    let instanceData = new Map<string, DocumentData>();
     for (let i = 0; i < this.workoutComponents.length; i++) {
       const workoutComponent = this.workoutComponents.get(i);
-      if (workoutComponent) {
-        const data = workoutComponent.getWorkoutData();
-        if (data.instanceData.size > 0) {
-          workoutData.push(data);
-        }
+      if (!workoutComponent) {
+        console.error("Error: something went wrong fetching data from component");
+        return;
+      }
+      const data = workoutComponent.getInstanceData();
+      for (const [key, val] of data) {  
+        instanceData.set(key, val);
       }
     }
-    return workoutData;
+    return instanceData;
   }
-
-  //assembles information from each workout and creates historyDocs at the same time
-  // createDocs(
-  //     workoutInstances: Map<DocumentReference, DocumentData>, 
-  //     workouts:  DocumentReference[],
-  //     historyDocs: DocumentData[]
-  // ) {
-  //   this.workouts$.forEach((workout) => {
-  //     let didWorkout = false;
-  //     Object.keys(workout.userPerformance).forEach((user) => {
-  //       if (workout.userPerformance[user].performed) {
-  //         didWorkout = true;
-
-  //         const instancePath = `${this.workoutPath}/${workout.workoutId}/Users/${user}/Instances`
-  //         const instanceRef = this.dbService.getRefFromCollectionPath(instancePath);
-  //         workoutInstances.set(instanceRef, workout.userPerformance[user].instanceData);
-
-  //         historyDocs.push({
-  //           user: user,
-  //           instanceRef:`${instancePath}/${instanceRef.id}`,
-  //           workoutName: workout.workoutData['displayName']
-  //         })
-  //       }
-  //     })
-
-  //     if (didWorkout) {
-  //       const workoutRef = this.dbService.getRefFromDocPath(`${this.workoutPath}/${workout.workoutId}`);
-  //       workouts.push(workoutRef);
-  //     }
-  //   })
-  // }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);

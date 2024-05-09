@@ -1,7 +1,6 @@
 import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
-import { DocumentData, DocumentReference, serverTimestamp } from 'firebase/firestore';
+import { DocumentData, serverTimestamp } from 'firebase/firestore';
 
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
@@ -47,7 +46,7 @@ export class AddWorkoutPanelComponent {
     { value: 0, name: 'aerobic' },
     { value: 1, name: 'anaerobic' }
   ]
-  selectedType = this.workoutType[0];
+  selectedType = this.workoutType[0].value;
 
   async addWorkout() {
     const workoutId = Util.pascalCase(this.workoutName);
@@ -57,7 +56,7 @@ export class AddWorkoutPanelComponent {
       id: workoutId,
       path: path,
       displayName: this.workoutName,
-      type: this.selectedType.value
+      type: this.selectedType
     };
     this.db.setDoc(ref, doc)
     .then(() => {
@@ -68,7 +67,7 @@ export class AddWorkoutPanelComponent {
 
   async addUsersToWorkout(workoutPath: string) {
     const userDoc: DocumentData = {
-      latestDate: serverTimestamp()
+      date: serverTimestamp()
     };
     //TODO: fetch this from db
     const users = ['Ian', 'Holly'];

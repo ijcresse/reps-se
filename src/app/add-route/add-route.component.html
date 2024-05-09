@@ -1,7 +1,6 @@
 <section class="header">
     <h1 class="headline-6">{{ templateName }}</h1>
     <button mat-stroked-button color="primary" (click)="finishWorkout()">Complete {{ templateName }} Workout</button>
-    <button mat-stroked-button color="primary" (click)="fetchWorkoutData()">Fetch workout data NYAO!!!</button>
 </section>
 <section class="content">
     @if (!loaded) {
@@ -13,10 +12,10 @@
     <h3 class="headline-2">History:</h3>
     @for (workout of workouts$; track workout; let idx = $index) {
         <app-workout-panel
-            [workoutId]="workout.workoutId"
-            [workoutName]="workout.workoutData['displayName']"
-            [workoutPath]="workoutPath"
-            [workoutType]="workout.workoutData['type']"
+            [workoutId]="workout.id"
+            [workoutName]="workout.displayName"
+            [workoutPath]="workout.path"
+            [workoutType]="workout.type"
             [templateColor]="templateId"></app-workout-panel>
     }
 </section>
