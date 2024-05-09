@@ -120,7 +120,7 @@ export class FirestoreService {
       //from there i could pass it all to a splitter/pathutil and manage it that way.
       historyInstances.push({
         user: pathValues[4],
-        instanceRef: path,
+        instanceRef: instanceRef.path,
         workoutName: pathValues[3]
       })
     }
