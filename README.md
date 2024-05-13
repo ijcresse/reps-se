@@ -10,11 +10,14 @@ A simple workout tracker app to match a couple of use cases:
 - A user can open a workout containing the most recent performance for that individual user and update its data ('doing' the workout for that workout day)
 - A user can save a workout day and see it represented on the main page's history section
 - A user can save a workout instance independently of their workout partner (ex. one workout partner missed a week) and have the data still be consistent
+- An unauthorized user won't have access to the application
 
 ## Installation notes
 
 This project was built on Angular17, with AngularFire v17.
 For ease of use, ensure the Angular CLI and Firebase CLI are installed.
+Email and password auth is required. Setup here:
+`https://console.firebase.google.com/u/1/project/<your db>/authentication/users`
 
 ## Development server
 

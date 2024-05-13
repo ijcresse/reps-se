@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WorkoutPanelComponent } from '../components/workout-panel/workout-panel.component';
 import { AddWorkoutPanelComponent } from '../components/add-workout-panel/add-workout-panel.component';
 import { FirestoreService } from '../firestore.service';
+import { AuthService } from '../auth.service';
 import { Workout } from '../workout.interface';
 
 @Component({
@@ -31,6 +32,7 @@ import { Workout } from '../workout.interface';
 })
 export class AddRouteComponent {
   dbService: FirestoreService = inject(FirestoreService);
+  authService: AuthService = inject(AuthService);
 
   isExistingTemplate!: boolean;
   loaded: boolean;
@@ -55,6 +57,10 @@ export class AddRouteComponent {
 
   //TODO: re-engineer this. even with isExistingTemplate, this feels a little hacky
   async ngOnInit() {
+    if (!this.authService.isAuthenticated()) {
+      this.authService.loginRedirect();
+    }
+
     if (!this.isExistingTemplate) {
       await this.dbService.createWorkoutTemplate(this.templateId, this.templateName)
       .then(() => {
