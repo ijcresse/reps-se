@@ -16,6 +16,8 @@ A simple workout tracker app to match a couple of use cases:
 
 This project was built on Angular17, with AngularFire v17.
 For ease of use, ensure the Angular CLI and Firebase CLI are installed.
+Email and password auth is required. Setup here:
+`https://console.firebase.google.com/u/1/project/<your db>/authentication/users`
 
 ## Development server
 
