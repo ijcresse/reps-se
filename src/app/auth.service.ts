@@ -20,12 +20,12 @@ export class AuthService {
     })
     .catch((error) => {
       console.log("Login error:", error.code, error.message);
-      //open snackbar. clear fields
+      //TODO: open snackbar
     })
   }
 
   isAuthenticated() {
-    return this.auth.currentUser === null;
+    return this.auth.currentUser !== null;
   }
 
   loginRedirect() {

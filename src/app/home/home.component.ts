@@ -13,6 +13,7 @@ import { DocumentData } from '@angular/fire/firestore';
 import { AddTemplatePanelComponent } from '../components/add-template-panel/add-template-panel.component';
 import { HistoryPanelComponent } from '../components/history-panel/history-panel.component';
 import { FirestoreService } from '../firestore.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -33,11 +34,16 @@ import { FirestoreService } from '../firestore.service';
 })
 export class HomeComponent {
   db: FirestoreService = inject(FirestoreService);
+  authService: AuthService = inject(AuthService);
   history$: DocumentData[] = [];
 
   title: string = 'Reps.';
 
   async ngOnInit() {
+    if (!this.authService.isAuthenticated()) {
+      this.authService.loginRedirect();
+    }
+
     await this.db.getHistoryDocs()
     .then((docs) => {
       this.history$ = docs;

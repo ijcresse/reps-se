@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { Auth } from '@angular/fire/auth';
-
 import { HomeComponent } from './home/home.component';
 import { AddRouteComponent } from './add-route/add-route.component';
 import { MatDividerModule } from '@angular/material/divider';
