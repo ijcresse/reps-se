@@ -119,7 +119,7 @@ export class FirestoreService {
       //TODO: all this is a little irrelevant. shouldn't it just be the instanceRef path?
       //from there i could pass it all to a splitter/pathutil and manage it that way.
       historyInstances.push({
-        user: pathValues[4],
+        user: pathValues[5],
         instanceRef: instanceRef.path,
         workoutName: pathValues[3]
       })

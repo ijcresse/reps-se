@@ -82,10 +82,11 @@ export class AddRouteComponent {
   async finishWorkout() {
     const instanceData = this.fetchInstanceData();
     if (instanceData && instanceData.size > 0) {
-      await this.dbService.saveFinishedWorkoutTemplate(this.templateName, instanceData)
-      .then(() => {
-        this.openSnackBar(`${this.templateName} complete!`, "OK");
-      });
+      console.log('saving instances!', instanceData);
+      // await this.dbService.saveFinishedWorkoutTemplate(this.templateName, instanceData)
+      // .then(() => {
+      //   this.openSnackBar(`${this.templateName} complete!`, "OK");
+      // });
     } else if (instanceData && instanceData.size === 0) {
       this.openSnackBar("Error: No workouts performed. Have you hit 'Done'?", "OK");
     } else {
