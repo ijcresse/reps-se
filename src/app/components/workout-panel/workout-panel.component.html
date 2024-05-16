@@ -1,5 +1,5 @@
 <mat-expansion-panel [ngClass]="panelColor">
-    <mat-expansion-panel-header>
+    <mat-expansion-panel-header [ngClass]="panelColor">
         <mat-panel-title [ngClass]="panelColor">
             <h3 class="subtitle-1">{{ workoutName }}</h3>
         </mat-panel-title>
@@ -15,11 +15,15 @@
             [workoutType] = "workoutType"
             [userPath]="userPath" 
             user="Ian"
-            [templateColor]="templateColor"></app-workout-instance>
+            [templateColor]="templateColor"
+            (panelColorChange)="panelColorChange($event)"
+            ></app-workout-instance>
         <app-workout-instance 
             [workoutType] = "workoutType"
             [userPath]="userPath" 
             user="Holly"
-            [templateColor]="templateColor"></app-workout-instance>
+            [templateColor]="templateColor"
+            (panelColorChange)="panelColorChange($event)"
+            ></app-workout-instance>
     </ng-template>
 </mat-expansion-panel>

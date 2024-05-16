@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AddRouteComponent } from './add-route/add-route.component';
 import { LoginComponent } from './components/login/login.component';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 export const routes: Routes = [
     {
@@ -24,5 +25,9 @@ export const routes: Routes = [
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'
+    },
+    {
+        path: '**',
+        component: ErrorPageComponent
     }
 ];

@@ -13,7 +13,6 @@ export class AuthService {
   constructor(private router: Router) { }
 
   async signIn(email:string, password: string) {
-    console.log('login attempt with', email, password);
     signInWithEmailAndPassword(this.auth, email, password)
     .then(() => {
       this.router.navigateByUrl('/home');

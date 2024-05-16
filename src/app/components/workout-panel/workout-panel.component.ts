@@ -57,4 +57,8 @@ export class WorkoutPanelComponent {
     }
     return instanceData;
   }
+
+  panelColorChange(color: string) {
+    this.panelColor = color;
+  }
 }
