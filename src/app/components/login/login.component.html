@@ -5,11 +5,11 @@
     <mat-card-actions class="form">
         <mat-form-field>
             <mat-label>Email</mat-label>
-            <input type="email" matInput [(ngModel)]="email">
+            <input type="email" matInput [(ngModel)]="email" (keydown.enter)="logIn()">
         </mat-form-field>
         <mat-form-field>
             <mat-label>Password</mat-label>
-            <input type="password" matInput [(ngModel)]="password">
+            <input type="password" matInput [(ngModel)]="password" (keydown.enter)="logIn()">
         </mat-form-field>
         <button mat-stroked-button (click)="logIn()">Submit</button>
     </mat-card-actions>

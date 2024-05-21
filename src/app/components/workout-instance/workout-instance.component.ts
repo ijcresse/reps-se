@@ -68,6 +68,10 @@ export class WorkoutInstanceComponent {
     })
   }
 
+  getKeys(obj: Object) {
+    return Object.keys(obj);
+  }
+
   updateFields() {
     this.panelColor = this.templateColor;
     this.currentState = 'performed';
