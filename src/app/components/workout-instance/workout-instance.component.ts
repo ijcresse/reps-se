@@ -69,7 +69,16 @@ export class WorkoutInstanceComponent {
   }
 
   getKeys(obj: Object) {
-    return Object.keys(obj);
+    const fields = Object.keys(obj);
+    if (fields.includes('hours')) {
+      return [
+        'hours', 'minutes', 'distance', 'notes'
+      ]
+    } else {
+      return [
+        'sets', 'reps', 'weight', 'notes'
+      ]
+    }
   }
 
   updateFields() {
