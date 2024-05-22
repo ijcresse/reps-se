@@ -68,6 +68,19 @@ export class WorkoutInstanceComponent {
     })
   }
 
+  getKeys(obj: Object) {
+    const fields = Object.keys(obj);
+    if (fields.includes('hours')) {
+      return [
+        'hours', 'minutes', 'distance', 'notes'
+      ]
+    } else {
+      return [
+        'sets', 'reps', 'weight', 'notes'
+      ]
+    }
+  }
+
   updateFields() {
     this.panelColor = this.templateColor;
     this.currentState = 'performed';

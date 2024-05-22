@@ -10,21 +10,21 @@
         </div>
         <mat-divider></mat-divider>
         <div class="form-container">
-            <div *ngFor="let field of fields.performance | keyvalue" class="field">
-                @if (field.key === 'notes') {
+            <div *ngFor="let key of getKeys(fields.performance)" class="field">
+                @if (key === 'notes') {
                     <mat-form-field class="notes">
-                        <mat-label>{{ field.key }}</mat-label>
-                        <textarea matInput [(ngModel)]="field.value"></textarea>
+                        <mat-label>{{ key }}</mat-label>
+                        <textarea matInput [(ngModel)]="fields.performance[key]"></textarea>
                     </mat-form-field>
                 } @else {
-                    <p class="body-1">{{ field.key }}</p>
-                    <button mat-stroked-button (click)="decrement(field.key)">
+                    <p class="body-1">{{ key }}</p>
+                    <button mat-stroked-button (click)="decrement(key)">
                         <mat-icon>remove</mat-icon>
                     </button>
                     <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="field.value" />
+                        <input matInput type="number" [(ngModel)]="fields.performance[key]" />
                     </mat-form-field>
-                    <button mat-stroked-button (click)="increment(field.key)">
+                    <button mat-stroked-button (click)="increment(key)">
                         <mat-icon>add</mat-icon>
                     </button>
                 }
