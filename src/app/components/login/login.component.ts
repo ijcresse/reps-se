@@ -39,4 +39,8 @@ export class LoginComponent {
     this.email = "";
     this.password = "";
   }
+
+  guestAccess() {
+    this.authService.homeRedirect();
+  }
 }

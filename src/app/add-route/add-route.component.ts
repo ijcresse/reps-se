@@ -57,10 +57,6 @@ export class AddRouteComponent {
 
   //TODO: re-engineer this. even with isExistingTemplate, this feels a little hacky
   async ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.authService.loginRedirect();
-    }
-
     if (!this.isExistingTemplate) {
       await this.dbService.createWorkoutTemplate(this.templateId, this.templateName)
       .then(() => {
@@ -80,6 +76,9 @@ export class AddRouteComponent {
   }
 
   async finishWorkout() {
+    if (!this.authService.isAuthenticated()) {
+      this.openSnackBar(`Error: User not logged in. Please log in to submit a workout.`, "OK");
+    }
     const instanceData = this.fetchInstanceData();
     if (instanceData && instanceData.size > 0) {
       await this.dbService.saveFinishedWorkoutTemplate(this.templateName, instanceData)

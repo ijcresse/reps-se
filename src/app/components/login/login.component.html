@@ -11,6 +11,9 @@
             <mat-label>Password</mat-label>
             <input type="password" matInput [(ngModel)]="password" (keydown.enter)="logIn()">
         </mat-form-field>
-        <button mat-stroked-button (click)="logIn()">Submit</button>
+        <div class="actions">
+            <button mat-flat-button color="primary" (click)="logIn()">Submit</button>
+            <button mat-stroked-button (click)="guestAccess()">Continue as Guest</button>
+        </div>
     </mat-card-actions>
 </mat-card>

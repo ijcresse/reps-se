@@ -3,6 +3,20 @@
     <a [routerLink]="['/']">
       <h1 class="headline-5"><i>{{ title }}</i></h1>
     </a>
+    <div class="links">
+      <a class="link" href="https://www.github.com/ijcresse/reps-se">
+        <mat-icon>info</mat-icon>
+      </a>
+      <mat-divider class="links-bar" [vertical]="true"></mat-divider>
+      <a class="link" [routerLink]="['/login']">
+        <mat-icon>account_circle</mat-icon>
+        @if (authorized) {
+          <p class="subtitle-1 authorized">Authorized</p>
+        } @else {
+          <p class="subtitle-1 unauthorized">Guest</p>
+        }
+      </a>
+    </div>
   </section>
   <mat-divider></mat-divider>
   <section class="content">
