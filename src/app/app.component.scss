@@ -4,11 +4,36 @@
 }
 
 .header {
-    margin-bottom: 1em;
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
 }
 
 .content {
     margin-top: 1em;
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.links-bar {
+    margin: 0 1em 1em 0;
+}
+
+.link {
+    text-align: center;
+    width: 3em;
+}
+
+.authorized {
+    color: #4CAF50;
+}
+
+.unauthorized {
+    color: #EF5350;
 }
 
 a {

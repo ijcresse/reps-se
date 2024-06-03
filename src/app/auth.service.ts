@@ -24,6 +24,7 @@ export class AuthService {
   }
 
   isAuthenticated() {
+    console.log(this.auth.currentUser);
     return this.auth.currentUser !== null;
   }
 
