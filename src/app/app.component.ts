@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { HomeComponent } from './home/home.component';
 import { AddRouteComponent } from './add-route/add-route.component';
-import { AuthService } from './auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -24,11 +24,8 @@ import { AuthService } from './auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  authService: AuthService = inject(AuthService);
   title: string = 'Reps.';
-  authorized: boolean = false;
   
   constructor() {
-    this.authorized = this.authService.isAuthenticated();
   }
 }
