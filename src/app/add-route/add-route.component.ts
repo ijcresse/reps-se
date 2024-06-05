@@ -57,6 +57,9 @@ export class AddRouteComponent {
 
   //TODO: re-engineer this. even with isExistingTemplate, this feels a little hacky
   async ngOnInit() {
+    if (!this.authService.isAuthenticated()) {
+      this.openSnackBar("Warning: Not logged in. You won't be able to submit forms as a guest.", "OK");
+    }
     if (!this.isExistingTemplate) {
       await this.dbService.createWorkoutTemplate(this.templateId, this.templateName)
       .then(() => {

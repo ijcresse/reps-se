@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 
 import { AuthService } from '../../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -28,16 +29,19 @@ export class LoginComponent {
   email: string = "";
   password: string = "";
 
-  ngOnInit() {
-    if (this.authService.isAuthenticated()) {
-      this.authService.homeRedirect();
-    }
+  constructor(private _snackBar: MatSnackBar) {
+    
   }
 
   logIn() {
     this.authService.signIn(this.email, this.password);
     this.email = "";
     this.password = "";
+  }
+
+  logOut() {
+    this.authService.logOut();
+    this._snackBar.open("Logged out.", "OK");
   }
 
   guestAccess() {
